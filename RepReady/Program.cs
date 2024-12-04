@@ -48,5 +48,4 @@ app.MapControllerRoute(
     pattern: "{controller=Home}/{action=Index}/{id?}");
 app.MapRazorPages();
 
-app.Urls.Add("http://0.0.0.0:80");
 app.Run();
