@@ -24,5 +24,8 @@ namespace RepReady.Controllers
         {
             return View();
         }
+
+        // to do crud fast
+
     }
 }
