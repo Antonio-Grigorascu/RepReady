@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using RepReady.Models;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RepReady.Models
@@ -25,4 +26,7 @@ namespace RepReady.Models
         public IEnumerable<SelectListItem>? AllRoles { get; set; }
 
     }
+
+
 }
+

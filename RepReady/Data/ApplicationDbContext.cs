@@ -18,14 +18,11 @@ namespace RepReady.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Workout> Workouts { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            base.OnModelCreating(modelBuilder);
+        //protected override void OnModelCreating(ModelBuilder modelBuilder)
+        //{
+        //    base.OnModelCreating(modelBuilder);
 
-            modelBuilder.Entity<ApplicationUser>()
-                .HasMany(u => u.Workouts)
-                .WithOne(w => w.ApplicationUser)
-                .HasForeignKey(w => w.ApplicationUserId);
-        }
+        //    // Other configurations...
+        //}
     }
 }

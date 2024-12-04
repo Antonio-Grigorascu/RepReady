@@ -1,4 +1,6 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using RepReady.Data;
 using RepReady.Models;
 using System.Diagnostics;
 
@@ -8,9 +10,28 @@ namespace RepReady.Controllers
     {
         private readonly ILogger<HomeController> _logger;
 
-        public HomeController(ILogger<HomeController> logger)
+        private readonly ApplicationDbContext db;
+
+        private readonly UserManager<ApplicationUser> _userManager;
+
+        private readonly RoleManager<IdentityRole> _roleManager;
+
+        public HomeController(
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager,
+            ILogger<HomeController> logger
+
+            )
         {
+            db = context;
+
+            _userManager = userManager;
+
+            _roleManager = roleManager;
+
             _logger = logger;
+
         }
 
         public IActionResult Index()

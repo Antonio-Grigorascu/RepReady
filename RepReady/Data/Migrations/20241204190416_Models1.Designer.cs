@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepReady.Data;
 
@@ -11,9 +12,11 @@ using RepReady.Data;
 namespace RepReady.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241204190416_Models1")]
+    partial class Models1
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -35,21 +38,6 @@ namespace RepReady.Data.Migrations
                     b.HasIndex("UsersId");
 
                     b.ToTable("ApplicationUserExercise");
-                });
-
-            modelBuilder.Entity("ApplicationUserWorkout", b =>
-                {
-                    b.Property<string>("UsersId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("WorkoutsId")
-                        .HasColumnType("int");
-
-                    b.HasKey("UsersId", "WorkoutsId");
-
-                    b.HasIndex("WorkoutsId");
-
-                    b.ToTable("ApplicationUserWorkout");
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRole", b =>
@@ -260,6 +248,21 @@ namespace RepReady.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
+            modelBuilder.Entity("RepReady.Models.ApplicationUserWorkout", b =>
+                {
+                    b.Property<string>("ApplicationUserId")
+                        .HasColumnType("nvarchar(450)");
+
+                    b.Property<int>("WorkoutId")
+                        .HasColumnType("int");
+
+                    b.HasKey("ApplicationUserId", "WorkoutId");
+
+                    b.HasIndex("WorkoutId");
+
+                    b.ToTable("ApplicationUserWorkouts");
+                });
+
             modelBuilder.Entity("RepReady.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -383,11 +386,13 @@ namespace RepReady.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<string>("OrganizerId")
-                        .HasColumnType("nvarchar(max)");
+                        .HasColumnType("nvarchar(450)");
 
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
+
+                    b.HasIndex("OrganizerId");
 
                     b.ToTable("Workouts");
                 });
@@ -403,21 +408,6 @@ namespace RepReady.Data.Migrations
                     b.HasOne("RepReady.Models.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-                });
-
-            modelBuilder.Entity("ApplicationUserWorkout", b =>
-                {
-                    b.HasOne("RepReady.Models.ApplicationUser", null)
-                        .WithMany()
-                        .HasForeignKey("UsersId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RepReady.Models.Workout", null)
-                        .WithMany()
-                        .HasForeignKey("WorkoutsId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -473,6 +463,25 @@ namespace RepReady.Data.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("RepReady.Models.ApplicationUserWorkout", b =>
+                {
+                    b.HasOne("RepReady.Models.ApplicationUser", "ApplicationUser")
+                        .WithMany("Workouts")
+                        .HasForeignKey("ApplicationUserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.HasOne("RepReady.Models.Workout", "Workout")
+                        .WithMany("Users")
+                        .HasForeignKey("WorkoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ApplicationUser");
+
+                    b.Navigation("Workout");
+                });
+
             modelBuilder.Entity("RepReady.Models.Comment", b =>
                 {
                     b.HasOne("RepReady.Models.Exercise", "Exercise")
@@ -511,12 +520,20 @@ namespace RepReady.Data.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("RepReady.Models.ApplicationUser", "Organizer")
+                        .WithMany()
+                        .HasForeignKey("OrganizerId");
+
                     b.Navigation("Category");
+
+                    b.Navigation("Organizer");
                 });
 
             modelBuilder.Entity("RepReady.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Comments");
+
+                    b.Navigation("Workouts");
                 });
 
             modelBuilder.Entity("RepReady.Models.Category", b =>
@@ -532,6 +549,8 @@ namespace RepReady.Data.Migrations
             modelBuilder.Entity("RepReady.Models.Workout", b =>
                 {
                     b.Navigation("Exercises");
+
+                    b.Navigation("Users");
                 });
 #pragma warning restore 612, 618
         }
