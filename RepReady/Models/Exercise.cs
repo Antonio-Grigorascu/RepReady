@@ -17,17 +17,21 @@ namespace RepReady.Models
         [Required(ErrorMessage = "Descrierea exercitiului este obligatorie")]
         public string Description { get; set; }
 
+        [Required(ErrorMessage = "Numarul de repetari este obligatoriu")]
+        [Range(1, 32, ErrorMessage = "Numarul de repetari trebuie sa fie intre 1 si 32")]
         public int Reps { get; set; }
 
+        [Required(ErrorMessage = "Numarul de seturi este obligatoriu")]
+        [Range(1, 8, ErrorMessage = "Numarul de seturi trebuie sa fie intre 1 si 8")]
         public int Sets { get; set; }
 
-        public bool Status { get; set; }
+        public bool? Status { get; set; }
 
-        public DateTime Start { get; set; }
+        public DateTime Start { get; set; }  // planificate de la inceput
 
-        public DateTime Finish { get; set; }
+        public DateTime Finish { get; set; }  // planificate de la inceput
 
-        //public file media
+        //public file media 
 
         [Required(ErrorMessage = "Antenamentul este obligatoriu")]
         public int? WorkoutId { get; set; }
@@ -36,10 +40,8 @@ namespace RepReady.Models
 
         public virtual ICollection<Comment>? Comments { get; set; }
 
-        public virtual ICollection<ApplicationUser>? Users { get; set; }
+        public virtual ICollection<ApplicationUser> Users { get; set; }
 
-        [NotMapped]
-        public IEnumerable<SelectListItem>? WorkoutList { get; set; }
 
 
     }

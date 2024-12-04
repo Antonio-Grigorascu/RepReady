@@ -1,20 +1,20 @@
 {
   "format": 1,
   "restore": {
-    "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\RepReady\\RepReady.csproj": {}
+    "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\RepReady.csproj": {}
   },
   "projects": {
-    "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\RepReady\\RepReady.csproj": {
+    "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\RepReady.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\RepReady\\RepReady.csproj",
+        "projectUniqueName": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\RepReady.csproj",
         "projectName": "RepReady",
-        "projectPath": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\RepReady\\RepReady.csproj",
-        "packagesPath": "C:\\Users\\catal\\.nuget\\packages\\",
-        "outputPath": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\RepReady\\obj\\",
+        "projectPath": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\RepReady.csproj",
+        "packagesPath": "C:\\Users\\PC\\.nuget\\packages\\",
+        "outputPath": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\obj\\",
         "projectStyle": "PackageReference",
         "configFilePaths": [
-          "C:\\Users\\catal\\AppData\\Roaming\\NuGet\\NuGet.Config",
+          "C:\\Users\\PC\\AppData\\Roaming\\NuGet\\NuGet.Config",
           "C:\\Program Files (x86)\\NuGet\\Config\\Microsoft.VisualStudio.Offline.config"
         ],
         "originalTargetFrameworks": [
@@ -86,7 +86,7 @@
               "privateAssets": "all"
             }
           },
-          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.402/PortableRuntimeIdentifierGraph.json"
+          "runtimeIdentifierGraphPath": "C:\\Program Files\\dotnet\\sdk\\8.0.403/PortableRuntimeIdentifierGraph.json"
         }
       }
     }
