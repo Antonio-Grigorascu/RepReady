@@ -1,0 +1,69 @@
+﻿<h2>Formular adăugare exercițiu</h2>
+
+<form method="post" action="/Exercises/New">
+    <!-- Title -->
+    <div>
+        <label for="title">Titlu exercițiu</label><br />
+        <input type="text" id="title" name="Title" required maxlength="100" minlength="5" placeholder="Introdu titlul exercițiului" />
+    </div>
+    <br />
+
+    <!-- Description -->
+    <div>
+        <label for="description">Descriere exercițiu</label><br />
+        <textarea id="description" name="Description" required placeholder="Descrie exercițiul"></textarea>
+    </div>
+    <br />
+
+    <!-- Reps -->
+    <div>
+        <label for="reps">Număr de repetări</label><br />
+        <input type="number" id="reps" name="Reps" required min="1" max="32" placeholder="Introdu numărul de repetări" />
+    </div>
+    <br />
+
+    <!-- Sets -->
+    <div>
+        <label for="sets">Număr de seturi</label><br />
+        <input type="number" id="sets" name="Sets" required min="1" max="8" placeholder="Introdu numărul de seturi" />
+    </div>
+    <br />
+
+    <!-- Status -->
+    <div>
+        <label for="status">Status</label><br />
+        <select id="status" name="Status" required>
+            <option value="true">Complet</option>
+            <option value="false">Incomplet</option>
+        </select>
+    </div>
+    <br />
+
+    <!-- Start Date -->
+    <div>
+        <label for="start">Data și ora de început</label><br />
+        <input type="datetime-local" id="start" name="Start" required />
+    </div>
+    <br />
+
+    <!-- Finish Date -->
+    <div>
+        <label for="finish">Data și ora de final</label><br />
+        <input type="datetime-local" id="finish" name="Finish" required />
+    </div>
+    <br />
+
+    <!-- Workout Selection -->
+    <div>
+        <label for="workoutId">Antrenament</label><br />
+        <select id="workoutId" name="WorkoutId" required>
+            <option value="" disabled selected>Selectează antrenamentul</option>
+            <option value="1">Upper Body Strength</option>
+            <option value="2">Morning Cardio</option>
+        </select>
+    </div>
+    <br />
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success">Adaugă exercițiul</button>
+</form>

@@ -1,0 +1,33 @@
+﻿@{
+    ViewBag.PageName = "Show";
+}
+
+<h2>@ViewBag.PageName</h2>
+
+<hr />
+
+@if (ViewBag.Exercise != null)
+{
+    <h1>@ViewBag.Exercise.Title</h1>
+    <p>@ViewBag.Exercise.Description</p>
+    <small>Reps: @ViewBag.Exercise.Reps</small>
+    <small>Sets: @ViewBag.Exercise.Sets</small>
+    <small>Status: @(ViewBag.Exercise.Status == true ? "Active" : "Inactive")</small>
+    <small>Start: @ViewBag.Exercise.Start.ToString("g")</small>
+    <small>Finish: @ViewBag.Exercise.Finish.ToString("g")</small>
+
+    <br />
+
+    <form method="post" action="/Exercises/Delete/@ViewBag.Exercise.Id">
+        <button type="submit">Stergere exercitiu</button>
+    </form>
+}
+else
+{
+    <p>Exercise details not available.</p>
+}
+
+<hr />
+<br />
+
+<a href="/Exercises/Index">Afisare exercitii</a>

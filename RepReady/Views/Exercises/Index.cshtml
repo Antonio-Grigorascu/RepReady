@@ -1,5 +1,36 @@
-﻿@*
-    For more information on enabling MVC for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
-*@
-@{
+﻿@{
+    ViewBag.PageName = "Index";
 }
+
+<h2>@ViewBag.PageName</h2>
+
+<hr />
+
+@foreach (var exercise in ViewBag.Exercises)
+{
+    <h1>@exercise.Title</h1>
+    <p>@exercise.Description</p>
+    <p>@exercise.Reps</p>
+    <p>@exercise.Sets</p>
+    @if(exercise.Status == true)
+    {
+        <p>Active</p>
+    }
+    else
+    {
+        <p>Inactive</p>
+    }
+    <p>@exercise.Start</p>
+    <p>@exercise.Finish</p>
+    
+
+    <a href="/Exercises/Show/@exercise.Id">Afisare exercitiu</a>
+    <a href="/Exercises/Edit/@exercise.Id">Editare exercitiu</a>
+
+
+    <br />
+    <hr />
+    <br />
+}
+
+<a href="/Exercises/New">Adaugare exercițiu</a>
