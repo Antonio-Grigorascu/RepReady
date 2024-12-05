@@ -1,36 +1,54 @@
-﻿@{
-    ViewBag.PageName = "Index";
+﻿@model RepReady.Models.Exercise
+
+<h2 class="text-center">Afisare exerciții</h2>
+
+<br />
+
+@if (ViewBag.Message != null)
+{
+
+    <h2 class="alert-success p-3 rounded-3 text-center mb-5">@ViewBag.Message</h2>
 }
 
-<h2>@ViewBag.PageName</h2>
 
-<hr />
+<div class="d-flex justify-content-center">
+
+
+    <a class="btn btn-outline-success" href="/Exercises/New">Adauga exercițiu</a>
+    <br />
+
+</div>
+
+<br />
+
 
 @foreach (var exercise in ViewBag.Exercises)
 {
-    <h1>@exercise.Title</h1>
-    <p>@exercise.Description</p>
-    <p>@exercise.Reps</p>
-    <p>@exercise.Sets</p>
-    @if(exercise.Status == true)
-    {
-        <p>Active</p>
-    }
-    else
-    {
-        <p>Inactive</p>
-    }
-    <p>@exercise.Start</p>
-    <p>@exercise.Finish</p>
-    
+    <div class="card">
 
-    <a href="/Exercises/Show/@exercise.Id">Afisare exercitiu</a>
-    <a href="/Exercises/Edit/@exercise.Id">Editare exercitiu</a>
+        <div class="card-body">
 
+            <h3 class="card-title alert-success py-3 px-3 rounded-2">@exercise.Title</h3>
+
+            <div class="d-flex justify-content-between flex-row mt-5">
+
+                <a class="btn btn-success" href="/Exercises/Show/@exercise.Id">Afisare exercițiu</a>
+
+                <span class="alert-success px-1 align-content-center">@exercise.Description</span>
+                <span class="alert-success px-1 align-content-center">@exercise.Reps</span>
+                <span class="alert-success px-1 align-content-center">@exercise.Sets</span>
+                <span class="alert-success px-1 align-content-center">Status: @(@exercise.Status == true ? "Active" : "Inactive")</span>
+                <span class="alert-success px-1 align-content-center">Start: @exercise.Start.ToString("g")</span>
+                <span class="alert-success px-1 align-content-center">Finish: @exercise.Finish.ToString("g")</span>
+
+            </div>
+
+        </div>
+
+    </div>
 
     <br />
-    <hr />
     <br />
 }
 
-<a href="/Exercises/New">Adaugare exercițiu</a>
+

@@ -16,8 +16,8 @@ namespace RepReady.Models
 
         public bool WasEdited { get; set; } // SE PUNE AUTOMAT - by default false
 
-        public int ExerciseId { get; set; }
-
+        public int ExerciseId { get; set; } // SE PUNE AUTOMAT - din formular
+         
         public string UserId { get; set; } // SE PUNE AUTOMAT
 
         public virtual ApplicationUser? User { get; set; }

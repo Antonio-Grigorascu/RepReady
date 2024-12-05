@@ -1,33 +1,108 @@
-﻿@{
-    ViewBag.PageName = "Show";
-}
+﻿@model RepReady.Models.Exercise
 
-<h2>@ViewBag.PageName</h2>
+@* Navigation buttons *@
+<div class="d-flex justify-content-center">
+    <a class="btn btn-outline-success" href="/Exercises/Index/">Afisare exercitii</a>
+    <a class="btn btn-outline-success" href="/Exercises/New">Adauga exercitiu</a>
+</div>
 
-<hr />
-
-@if (ViewBag.Exercise != null)
-{
-    <h1>@ViewBag.Exercise.Title</h1>
-    <p>@ViewBag.Exercise.Description</p>
-    <small>Reps: @ViewBag.Exercise.Reps</small>
-    <small>Sets: @ViewBag.Exercise.Sets</small>
-    <small>Status: @(ViewBag.Exercise.Status == true ? "Active" : "Inactive")</small>
-    <small>Start: @ViewBag.Exercise.Start.ToString("g")</small>
-    <small>Finish: @ViewBag.Exercise.Finish.ToString("g")</small>
-
-    <br />
-
-    <form method="post" action="/Exercises/Delete/@ViewBag.Exercise.Id">
-        <button type="submit">Stergere exercitiu</button>
-    </form>
-}
-else
-{
-    <p>Exercise details not available.</p>
-}
-
-<hr />
 <br />
 
-<a href="/Exercises/Index">Afisare exercitii</a>
+@* Exercise details card *@
+<div class="card">
+    <div class="card-body">
+        <h3 class="card-title alert-success py-3 px-3 rounded-2">@Model.Title</h3>
+
+        <div class="card-text">@Model.Description</div>
+
+        <div class="d-flex justify-content-between flex-row mt-5">
+            <span class="alert-success">Repetari: @Model.Reps</span>
+            <span class="alert-success">Seturi: @Model.Sets</span>
+            <span class="alert-success">Status: @(Model.Status == true ? "Activ" : "Inactiv")</span>
+            <span class="alert-success">Start: @Model.Start.ToString("g")</span>
+            <span class="alert-success">Finish: @Model.Finish.ToString("g")</span>
+        </div>
+    </div>
+
+    <hr />
+
+    <div class="d-flex flex-row justify-content-between">
+        <a class="btn btn-success" href="/Exercises/Edit/@Model.Id">Editeaza exercitiu</a>
+
+        <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id">
+            <button class="btn btn-danger" type="submit">Sterge exercitiu</button>
+        </form>
+    </div>
+</div>
+
+<br />
+<br />
+
+@* Display comments section *@
+@foreach (var comm in Model.Comments)
+{
+    <div class="container">
+        <div class="row">
+            <div class="col-md-2"></div>
+
+            <div class="col-md-8">
+                <div>
+                    <p>@comm.Content</p>
+                    <small>@comm.Date</small>
+                    @if(@comm.WasEdited == true)
+                    {
+                        <small>Edited</small>
+                    }
+                    
+                </div>
+                <br>
+
+                <div class="d-flex">
+                    <div>
+                        <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-itemid="@comm.Id">
+                            <i class="bi bi-pencil-square"></i>Editeaza
+                        </a>
+                    </div>
+
+                    <div>
+                        <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
+                            <button class="btn btn-outline-danger" type="submit">
+                                <i class="bi bi-trash"></i>Sterge
+                            </button>
+                        </form>
+                    </div>
+                </div>
+
+                <br />
+            </div>
+
+            <div class="col-md-2"></div>
+        </div>
+    </div>
+}
+
+@* Add comment form *@
+<div class="container">
+    <div class="row">
+        <div class="col-md-2"></div>
+
+        <div class="col-md-8">
+            <div class="card">
+                <form method="post" asp-controller="Exercises" asp-action="Show">
+                    <div class="card-body">
+                        <input type="hidden" name="ExerciseId" value="@Model.Id" />
+
+                        <label>Continut comentariu</label>
+                        <br />
+                        <textarea class="form-control" name="Content"></textarea>
+                        
+                        <br />
+                        <button class="btn btn-success" type="submit">Adauga comentariul</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+
+        <div class="col-md-2"></div>
+    </div>
+</div>

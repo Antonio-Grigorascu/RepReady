@@ -1,67 +1,82 @@
-﻿<h2>Formular adăugare exercițiu</h2>
+﻿@model RepReady.Models.Exercise
+<h2>Formular adăugare exercițiu</h2>
+@{
+    ViewData["Title"] = "Add Exercise";
+}
+<br />
 
-<form method="post" action="/Exercises/New">
+<form method="post" asp-action="New" asp-controller="Exercises">
     <!-- Title -->
-    <div>
-        <label for="title">Titlu exercițiu</label><br />
-        <input type="text" id="title" name="Title" required maxlength="100" minlength="5" placeholder="Introdu titlul exercițiului" />
+    <div class="form-group">
+        <label asp-for="Title">Titlu exercițiu</label>
+        <br />
+        <input asp-for="Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
     </div>
     <br />
 
     <!-- Description -->
-    <div>
-        <label for="description">Descriere exercițiu</label><br />
-        <textarea id="description" name="Description" required placeholder="Descrie exercițiul"></textarea>
+    <div class="form-group">
+        <label asp-for="Description">Descriere exercițiu</label><br />
+        <textarea asp-for="Description" class="form-control"></textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
     </div>
     <br />
 
     <!-- Reps -->
-    <div>
-        <label for="reps">Număr de repetări</label><br />
-        <input type="number" id="reps" name="Reps" required min="1" max="32" placeholder="Introdu numărul de repetări" />
+    <div class="form-group">
+        <label asp-for="Reps">Număr de repetări</label><br />
+        <input asp-for="Reps" class="form-control" />
+        <span asp-validation-for="Reps" class="text-danger"></span>
     </div>
     <br />
 
     <!-- Sets -->
-    <div>
-        <label for="sets">Număr de seturi</label><br />
-        <input type="number" id="sets" name="Sets" required min="1" max="8" placeholder="Introdu numărul de seturi" />
+    <div class="form-group">
+        <label asp-for="Sets">Număr de seturi</label><br />
+        <input asp-for="Sets" class="form-control" />
+        <span asp-validation-for="Sets" class="text-danger"></span>
     </div>
     <br />
 
     <!-- Status -->
-    <div>
-        <label for="status">Status</label><br />
-        <select id="status" name="Status" required>
+    <div class="form-group">
+        <label asp-for="Status">Status</label><br />
+        <select asp-for="Status" class="form-control">
+            <option value="">Selectează statusul</option>
             <option value="true">Complet</option>
             <option value="false">Incomplet</option>
         </select>
+        <span asp-validation-for="Status" class="text-danger"></span>
     </div>
+
     <br />
 
     <!-- Start Date -->
-    <div>
-        <label for="start">Data și ora de început</label><br />
-        <input type="datetime-local" id="start" name="Start" required />
+    <div class="form-group">
+        <label asp-for="Start">Data și ora de început</label><br />
+        <input asp-for="Start" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="Start" class="text-danger"></span>
     </div>
     <br />
 
     <!-- Finish Date -->
-    <div>
-        <label for="finish">Data și ora de final</label><br />
-        <input type="datetime-local" id="finish" name="Finish" required />
+    <div class="form-group">
+        <label asp-for="Finish">Data și ora de final</label><br />
+        <input asp-for="Finish" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="Finish" class="text-danger"></span>
     </div>
     <br />
 
     <!-- Workout Selection -->
-    <div>
-        <label for="workoutId">Antrenament</label><br />
-        <select id="workoutId" name="WorkoutId" required>
+    <div class="form-group">
+        <label asp-for="WorkoutId">Antrenament</label><br />
+        <select asp-for="WorkoutId" asp-items="ViewBag.Workouts" class="form-control">
             <option value="" disabled selected>Selectează antrenamentul</option>
-            <option value="1">Upper Body Strength</option>
-            <option value="2">Morning Cardio</option>
         </select>
+        <span asp-validation-for="WorkoutId" class="text-danger"></span>
     </div>
+
     <br />
 
     <!-- Submit Button -->
