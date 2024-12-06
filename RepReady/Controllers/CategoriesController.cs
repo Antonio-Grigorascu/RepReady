@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using RepReady.Data;
 using RepReady.Models;
 
@@ -20,12 +21,81 @@ namespace RepReady.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        public IActionResult Index()
+        public ActionResult Index()
+        {
+            if (TempData.ContainsKey("message"))
+            {
+                ViewBag.message = TempData["message"].ToString();
+            }
+            var categories = from category in db.Categories
+                             orderby category.Name
+                             select category;
+            ViewBag.Categories = categories;
+            return View();
+        }
+
+        public ActionResult Show(int id)
+        {
+            Category category = db.Categories.Find(id);
+            return View(category);
+        }
+
+        public ActionResult New()
         {
             return View();
         }
 
-        // to do crud fast
+        [HttpPost]
+        public ActionResult New(Category cat)
+        {
+            if (ModelState.IsValid)
+            {
+                db.Categories.Add(cat);
+                db.SaveChanges();
+                TempData["message"] = "Categoria a fost adaugata";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(cat);
+            }
+        }
 
+        public ActionResult Edit(int id)
+        {
+            Category category = db.Categories.Find(id);
+            return View(category);
+        }
+
+        [HttpPost]
+        public ActionResult Edit(int id, Category requestCategory)
+        {
+            Category category = db.Categories.Find(id);
+            if (ModelState.IsValid)
+            {
+                category.Name = requestCategory.Name;
+                db.SaveChanges();
+                TempData["message"] = "Categoria a fost modificata!";
+                return RedirectToAction("Index");
+            }
+            else
+            {
+                return View(requestCategory);
+            }
+        }
+
+        [HttpPost]
+        public ActionResult Delete(int id)
+        {
+            Category category = db.Categories.Include("Workouts")
+                                             .Include("Workouts.Exercises")
+                                             .Include("Workouts.Exercises.Comments")
+                                             .Where(c => c.Id == id)
+                                             .First();
+            db.Categories.Remove(category);
+            TempData["message"] = "Categoria a fost stearsa";
+            db.SaveChanges();
+            return RedirectToAction("Index");
+        }
     }
 }

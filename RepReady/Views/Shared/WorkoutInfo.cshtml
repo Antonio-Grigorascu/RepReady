@@ -1,0 +1,11 @@
+﻿@model RepReady.Models.Workout
+
+<div class="card-body">
+    <h3 class="card-title alert-success py-3 px-3 rounded-2">@Model.Name</h3>
+    <div class="d-flex justify-content-between flex-row mt-5">
+        <div><i class="bi bi-globe"></i> @Model.Category.Name</div>
+        <div><i class="bi "></i> @Model.Duration</div>
+        @*<div><i class="bi bi-person"></i> ViewBag.Organizer</div>*@
+        <span class="alert-success">@Model.Date</span>
+    </div>
+</div>

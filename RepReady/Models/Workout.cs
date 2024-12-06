@@ -32,7 +32,7 @@ namespace RepReady.Models
 
         public virtual ICollection<Exercise>? Exercises { get; set; }
 
-        public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ICollection<ApplicationUser>? Users { get; set; }
 
         [NotMapped]
         public IEnumerable<SelectListItem>? Categ { get; set; }

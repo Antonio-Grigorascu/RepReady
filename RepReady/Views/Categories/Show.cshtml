@@ -1,0 +1,18 @@
+﻿model RepReady.Models.Category
+@{
+    ViewBag.Title = "Afisare categorie";
+}
+<h2>@ViewBag.Title</h2>
+<br />
+<p>@Model.Name</p>
+
+<form method="post" asp-controller="Categories" asp-action="Delete"
+      asp-route-id="@Model.Id">
+    <button class="btn btn-danger" type="submit">Sterge categoria</button>
+</form>
+<br />
+<a class="btn alert-success" href="/Categories/Index/">Afisare lista categorii</a>
+<br />
+<hr />
+<br />
+
