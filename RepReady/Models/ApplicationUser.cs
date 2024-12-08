@@ -12,11 +12,7 @@ namespace RepReady.Models
 
         public virtual ICollection<Workout> Workouts { get; set; }
 
-        //public virtual ICollection<Workout>? OrganizingWorkouts { get; set; }
-
         public virtual ICollection<Exercise> Exercises { get; set; }
-
-        //public virtual ICollection<Exercise>? OrganizingExercises { get; set; }
 
         public string? FirstName { get; set; }
 

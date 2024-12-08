@@ -25,10 +25,13 @@ namespace RepReady.Models
         [Range(1, 8, ErrorMessage = "Numarul de seturi trebuie sa fie intre 1 si 8")]
         public int Sets { get; set; }
 
+        [Required(ErrorMessage = "Selectează un status.")]
         public bool? Status { get; set; }
 
+        [Required(ErrorMessage = "Data de început este obligatorie")]
         public DateTime Start { get; set; }  // planificate de la inceput
 
+        [Required(ErrorMessage = "Data de început este obligatorie")]
         public DateTime Finish { get; set; }  // planificate de la inceput
 
         //public file media 
@@ -40,7 +43,7 @@ namespace RepReady.Models
 
         public virtual ICollection<Comment>? Comments { get; set; }
 
-        public virtual ICollection<ApplicationUser> Users { get; set; }
+        public virtual ICollection<ApplicationUser>? Users { get; set; }
 
 
 

@@ -23,62 +23,35 @@
 <br />
 <br />
 
-@*
- Afisare exercitii impreuna cu butoanele de editare si stergere 
-@foreach (var ex in Model.Exercises)
+
+ @*Afisare exercitii impreuna cu butoanele de editare si stergere*@ 
+@foreach (var exercise in Model.Exercises)
 {
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2"></div>
-            <div class="col-md-8">
-                <div>
-                    <p>@ex.Title</p>
-                    <small>@ex.Description</small>
-                </div>
-                <br>
-                @if (ViewBag.Workout.OrganizerId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
-                {
-                    <div class="d-flex">
-                        <div>
-                            <a class="btn btn-outline-primary" asp-controller="Exercises" asp-action="Edit" asp-route-id="@ex.Id">
-                                <i class="bi bi-pencil-square"></i> Editeaza
-                            </a>
-                        </div>
-                        <div>
-                            <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@ex.Id">
-                                <button class="btn btn-outline-danger" type="submit"><i class="bi bi-trash"></i>Sterge</button>
-                            </form>
-                        </div>
-                    </div>
-                }
-                <br />
+    <div class="card">
+
+        <div class="card-body">
+
+            <h3 class="card-title alert-success py-3 px-3 rounded-2">@exercise.Title</h3>
+
+            <div class="d-flex justify-content-between flex-row mt-5">
+
+                <a class="btn btn-success" href="/Exercises/Show/@exercise.Id">Afisare exercițiu</a>
+
+                <span class="alert-success px-1 align-content-center">@exercise.Description</span>
+                <span class="alert-success px-1 align-content-center">@exercise.Reps</span>
+                <span class="alert-success px-1 align-content-center">@exercise.Sets</span>
+                <span class="alert-success px-1 align-content-center">Status: @(@exercise.Status == true ? "Active" : "Inactive")</span>
+                <span class="alert-success px-1 align-content-center">Start: @exercise.Start.ToString("g")</span>
+                <span class="alert-success px-1 align-content-center">Finish: @exercise.Finish.ToString("g")</span>
+
             </div>
-            <div class="col-md-2"></div>
+
         </div>
+
     </div>
+
+    <br />
+    <br />
 }
 
- Afisarea formularului in care se poate adauga un exercitiu 
-<div class="container">
-    <div class="row">
-        <div class="col-md-2"></div>
-        <div class="col-md-8">
-            <div class="card">
-                <form method="post" asp-controller="Workouts" asp-action="Show">
-                    <div class="card-body">
-                        <input type="hidden" name="WorkoutId" value="@Model.Id" />
-                        <input class="form-control" name="Ttile"/>
-                        <label>Descriere exercitiu</label>
-                        <br />
-                        <textarea class="form-control" name="Description"></textarea>
-                        <span asp-validation-for="Description" class="text-danger"></span>
-                        <br /><br />
-                        <button class="btn btn-success" type="submit">Adauga exercitiul</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-        <div class="col-md-2"></div>
-    </div>
-</div>
-*@
+<a class="btn btn-success" href="/Exercises/New">Adauga exercițiu</a>

@@ -62,12 +62,32 @@ build_metadata.AdditionalFiles.CssScope =
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ2F0ZWdvcmllc1xTaG93LmNzaHRtbA==
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Comments/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tbWVudHNcRWRpdC5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Comments/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcQ29tbWVudHNcSW5kZXguY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
+[C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Exercises/Edit.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXhlcmNpc2VzXEVkaXQuY3NodG1s
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Exercises/Error.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXhlcmNpc2VzXEVycm9yLmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
 [C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Exercises/Index.cshtml]
 build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXhlcmNpc2VzXEluZGV4LmNzaHRtbA==
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Exercises/New.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXhlcmNpc2VzXE5ldy5jc2h0bWw=
+build_metadata.AdditionalFiles.CssScope = 
+
+[C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Exercises/Show.cshtml]
+build_metadata.AdditionalFiles.TargetPath = Vmlld3NcRXhlcmNpc2VzXFNob3cuY3NodG1s
 build_metadata.AdditionalFiles.CssScope = 
 
 [C:/Users/Public/Dezvoltarea Aplicatiilor Web/RepReady/RepReady/Views/Home/Index.cshtml]
