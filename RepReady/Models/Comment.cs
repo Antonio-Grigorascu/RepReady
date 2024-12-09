@@ -18,7 +18,7 @@ namespace RepReady.Models
 
         public int ExerciseId { get; set; } // SE PUNE AUTOMAT - din formular
          
-        public string UserId { get; set; } // SE PUNE AUTOMAT
+        public string? UserId { get; set; } // SE PUNE AUTOMAT
 
         public virtual ApplicationUser? User { get; set; }
 

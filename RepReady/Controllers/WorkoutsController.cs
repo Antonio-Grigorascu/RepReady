@@ -82,7 +82,7 @@ namespace RepReady.Controllers
             }
         }
 
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult New()
         {
             Workout workout = new Workout();
@@ -91,7 +91,7 @@ namespace RepReady.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult New(Workout workout)
         {
             workout.Date = DateTime.Now;

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
@@ -14,9 +15,9 @@ namespace RepReady.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public ExercisesController(
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager
         )
         {
             db = context;
@@ -48,20 +49,26 @@ namespace RepReady.Controllers
         }
 
 
-
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Index()
         {
             //var exercises = from exercise in db.Exercises
             //                select exercise;
 
-            var exercise = db.Exercises;
+            var exercise = db.Exercises.Include("User");
 
             ViewBag.Exercises = exercise;
+
+            if(TempData.ContainsKey("message"))
+            {
+                ViewBag.Message = TempData["message"];
+            }
 
             return View();
         }
 
-        public IActionResult Show(int? id)
+        [Authorize(Roles = "User,Organizer,Admin")]
+        public IActionResult Show(int id)
         {
             //Exercise? exercises = db.Exercises.Find(id);
 
@@ -76,18 +83,31 @@ namespace RepReady.Controllers
             //ViewBag.PageName = "Show";
             //return View();
 
-            Exercise exercise = db.Exercises.Include("Comments").Where(e => e.Id == id).First();
+            Exercise exercise = db.Exercises
+                                .Include(e => e.Comments) // Include Comments
+                                .ThenInclude(c => c.User) // Include User for each Comment
+                                .FirstOrDefault(e => e.Id == id);
+
 
             //ViewBag.Exercise = exercise;
             return View(exercise);
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Show([FromForm] Comment comment)
         {
             comment.Date = System.DateTime.Now;
             comment.WasEdited = false;
             comment.UserId = _userManager.GetUserId(User);
+
+            // Check if the user is logged in and the UserId is not null
+            if (string.IsNullOrEmpty(comment.UserId))
+            {
+                TempData["message"] = "Utilizatorul nu este autentificat. Încercați să vă autentificați din nou.";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index", "Workouts");
+            }
 
             if (ModelState.IsValid)
             {
@@ -102,13 +122,17 @@ namespace RepReady.Controllers
                 {
                     foreach (var error in modelState.Errors)
                     {
-                        Console.WriteLine(error.ErrorMessage); // Log or debug this
+                        Console.WriteLine(error.ErrorMessage); // Debug this
                     }
                 }
 
-                Exercise exercise = db.Exercises.Include("Comments")
-                                                .Where(exercise => exercise.Id == comment.ExerciseId)
-                                                .First();
+                Exercise exercise = db.Exercises
+                                    .Include(e => e.Comments)        // Include comments
+                                    .ThenInclude(c => c.User)        // Include the User for each comment
+                                    .FirstOrDefault(e => e.Id == comment.ExerciseId);
+
+                TempData["message"] = "Eroare de validare! Verificați câmpurile introduse.";
+                TempData["messageType"] = "alert-danger";
 
                 //return Redirect("/Exercises/Show/" + comment.ExerciseId);
                 return View(exercise);
@@ -117,6 +141,7 @@ namespace RepReady.Controllers
 
 
         [HttpGet]
+        [Authorize(Roles = "Organizer,Admin")]
         public IActionResult New()
         {
             var workouts = db.Workouts.Select(w => new
@@ -134,6 +159,7 @@ namespace RepReady.Controllers
 
         // se adauga in baza de date
         [HttpPost]
+        [Authorize(Roles = "Organizer,Admin")]
         public IActionResult New(Exercise exercise)
         {
             
@@ -165,6 +191,7 @@ namespace RepReady.Controllers
             }
         }
 
+        [Authorize(Roles = "Organizer,Admin")]
         public IActionResult Edit(int? id)
         {
             //Exercise? exercise = db.Exercises.Find(id);
@@ -175,12 +202,13 @@ namespace RepReady.Controllers
                 return Content("Articolul nu exista in baza de date!");
             }
 
+             return View(exercise);
             
-            return View(exercise);
         }
 
         // Se adauga comentariul modifcat in baza de date
         [HttpPost]
+        [Authorize(Roles = "Organizer,Admin")]
         public ActionResult Edit(int id, Exercise requestExercise)
         {
             Exercise exercise = db.Exercises.Find(id);
@@ -208,6 +236,7 @@ namespace RepReady.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "Organizer,Admin")]
         public ActionResult Delete(int id)
         {
             Exercise? exercise = db.Exercises.Find(id);
