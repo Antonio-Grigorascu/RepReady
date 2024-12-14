@@ -22,39 +22,20 @@ namespace RepReady.Controllers
             _roleManager = roleManager;
         }
 
-        [HttpPost]
-        [Authorize(Roles = "User,Organizer,Admin")]
-        public IActionResult Delete(int id)
-        {
-            Comment comm = db.Comments.Find(id);
-            int exerciseId = comm.ExerciseId;
-
-            if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
-            {
-                db.Comments.Remove(comm);
-                db.SaveChanges();
-                return Redirect("/Exercises/Show/" + exerciseId);
-            }
-            else
-            {
-                TempData["message"] = "Nu aveti dreptul sa stergeti comentariul";
-                TempData["messageType"] = "alert-danger";
-                return Redirect("/Exercises/Show/" + exerciseId);
-            }
-            
-        }
-
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id)
         {
+            // Find the comment we want to edit
             Comment comm = db.Comments.Find(id);
             
-            if (comm == null)
+            if (comm == null) // For route protection
             {
                 TempData["message"] = "Comentariul nu a fost găsit.";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index", "Workouts");
             }
+
+            // Get the id of the exercise for redirecting
             int exerciseId = comm.ExerciseId;
 
             if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
@@ -73,6 +54,7 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id, Comment requestComment)
         {
+            // Find the comment we want to edit
             Comment comm = db.Comments.Find(id);
 
             if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
@@ -80,7 +62,7 @@ namespace RepReady.Controllers
                 if (ModelState.IsValid)
                 {
                     comm.Content = requestComment.Content;
-                    comm.WasEdited = true;
+                    comm.WasEdited = true; // Set the flag that the comment was edited
 
                     db.SaveChanges();
 
@@ -99,6 +81,31 @@ namespace RepReady.Controllers
             }
         }
 
+
+        [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
+        public IActionResult Delete(int id)
+        {
+            // Find the comment we want to delete
+            Comment comm = db.Comments.Find(id);
+
+            // Get the id of the exercise for redirecting
+            int exerciseId = comm.ExerciseId;
+
+            if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                db.Comments.Remove(comm);
+                db.SaveChanges();
+                return Redirect("/Exercises/Show/" + exerciseId);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa stergeti comentariul";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Exercises/Show/" + exerciseId);
+            }
+
+        }
 
     }
 }

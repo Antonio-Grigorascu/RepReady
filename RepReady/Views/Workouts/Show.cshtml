@@ -18,13 +18,24 @@
                 <button class="btn btn-danger" type="submit">Sterge antrenament</button>
             </form>
         </div>
+        @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
         TempData["workoutId"] = @Model.Id;
         <a class="btn btn-success" asp-controller="Exercises" asp-action="New">Adauga exercițiu</a>
+
+        @* We passed the WorkoutId to the controller to know in which Workout we add the invitation *@
+        TempData["workoutId"] = @Model.Id;
+        <a class="btn btn-success" asp-controller="WorkoutInvitations" asp-action="New">Invită participanți</a>
         
     }
 </div>
 <br />
 <br />
+
+@foreach(var user in Model.Users)
+{
+    <p>@user.UserName</p>
+    <br />
+}
 
 
  @*Afisare exercitii impreuna cu butoanele de editare si stergere*@ 
@@ -46,6 +57,7 @@
                 <span class="alert-success px-1 align-content-center">Status: @(@exercise.Status == true ? "Active" : "Inactive")</span>
                 <span class="alert-success px-1 align-content-center">Start: @exercise.Start.ToString("g")</span>
                 <span class="alert-success px-1 align-content-center">Finish: @exercise.Finish.ToString("g")</span>
+                <!-- Afisam numarul de utilizatori si un link catre un patial care contine lista de useri care participa la exercitiu -->
 
             </div>
 

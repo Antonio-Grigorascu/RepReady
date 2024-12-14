@@ -31,20 +31,27 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Show(int id)
         {
-            Exercise exercise = db.Exercises
-                                .Include(e => e.Comments) // Include Comments
-                                .ThenInclude(c => c.User) // Include User for each Comment
+
+            Exercise exercise = db.Exercises.Include("Users")
+                                .Include("Comments")
+                                .Include("Comments.User")  // All includes are for display
                                 .FirstOrDefault(e => e.Id == id);
 
             return View(exercise);
         }
 
+
+        // Action for adding a comment to an exercise
+        // Show because we are displaying the exercise and the comments and we want to preserve the current Exercise
         [HttpPost]
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Show([FromForm] Comment comment)
         {
+            
             comment.Date = System.DateTime.Now;
             comment.WasEdited = false;
+
+            // The user that left the comment is the current user
             comment.UserId = _userManager.GetUserId(User);
 
             // Check if the user is logged in and the UserId is not null
@@ -90,16 +97,23 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult New()
         {
+            // The id of the workout we add the exercise to
             int w_id = TempData["workoutId"] == null ? 0 : (int)TempData["workoutId"];
-            Workout workout = db.Workouts.Where(workout => workout.Id == w_id)
+
+            // The workout we add the exercise to
+            Workout workout = db.Workouts.Include("Users").Where(workout => workout.Id == w_id)
                                          .First();
 
+            // The users that are part of the workout
+            var users = db.Workouts.Include("Users").Where(w => w.Id == w_id).First().Users;
 
             if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
-                ViewBag.Workout = workout;
+                ViewBag.Workout = workout;  // For adding the workout id to the exercise (hidden)
+                ViewBag.Users = users;      // For adding the users to the exercise (select checkboxes)
 
                 Exercise exercise = new Exercise();
+
                 return View(exercise);
             }
             else
@@ -111,14 +125,22 @@ namespace RepReady.Controllers
         }
 
 
-        // se adauga in baza de date
         [HttpPost]
         [Authorize(Roles = "User,Organizer,Admin")]
-        public IActionResult New(Exercise exercise)
+        public IActionResult New(Exercise exercise, List<string> UsersIdList) 
         {
-            
-            if(ModelState.IsValid)
+            // UsersIdList is a list of user ids that would be added to the exercise - sent from the form (checkboxes)
+
+            if (ModelState.IsValid)
             {
+                exercise.Users = new List<ApplicationUser>(); // Initialize the list of users for the exercise
+                for (int i = 0; i < UsersIdList.Count; i++)
+                {
+                    // Add the users to the exercise from the list of user ids
+                    ApplicationUser user = db.Users.Find(UsersIdList[i]);
+                    exercise.Users.Add(user);
+                }
+
                 db.Exercises.Add(exercise);
                 db.SaveChanges();
                 TempData["message"] = "Exercițiul a fost adaugat";
@@ -142,16 +164,31 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id)
         {
-            Exercise? exercise = db.Exercises.Include("Workout").FirstOrDefault(e => e.Id == id);
+            // Get the exercise we want to edit
+            Exercise? exercise = db.Exercises
+                                    .Include("Workout")
+                                    .Include("Users")
+                                    .FirstOrDefault(e => e.Id == id);
 
             if (exercise == null)
             {
                 return Content("Exercitiul nu exista in baza de date!");
             }
 
+            // Get the users that are part of the workout
+            var users = db.Workouts.Include("Users").Where(w => w.Id == exercise.WorkoutId).First().Users;
+
             if (exercise.Workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
+                // For adding the workout id to the exercise (hidden)
                 ViewBag.WorkoutId = exercise.WorkoutId;
+
+                // For adding the users to the exercise (select checkboxes)
+                ViewBag.Users = users;
+
+                // For selecting the users (in the checkboxes) that are already part of the exercise
+                ViewBag.SelectedUsers = exercise.Users.Select(u => u.Id).ToList();
+
                 return View(exercise);
             }
             else
@@ -166,11 +203,23 @@ namespace RepReady.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User,Organizer,Admin")]
-        public ActionResult Edit(int id, Exercise requestExercise)
+        public ActionResult Edit(int id, Exercise requestExercise, List<string> UsersIdList)
         {
-            Exercise exercise = db.Exercises.Find(id);
+            // UsersIdList is a list of user ids that would be added to the exercise - sent from the form (checkboxes)
 
-            if(ModelState.IsValid)
+            // Get the exercise we want to edit
+            Exercise exercise = db.Exercises.Include("Users").Where(e => e.Id == id).First();
+
+            // List of the users that were part of the exercise before the edit
+            List<string> previousUsers = exercise.Users.Select(u => u.Id).ToList();
+
+            // List of the users that are added to the exercise in the edit
+            List<string>? addUsers = UsersIdList.Except(previousUsers).ToList();
+
+            // List of the users that are removed from the exercise in the edit
+            List<string>? removeUsers = previousUsers.Except(UsersIdList).ToList();
+
+            if (ModelState.IsValid)
             {
                 exercise.Title = requestExercise.Title;
                 exercise.Description = requestExercise.Description;
@@ -179,6 +228,20 @@ namespace RepReady.Controllers
                 exercise.Status = requestExercise.Status;
                 exercise.Start = requestExercise.Start;
                 exercise.Finish = requestExercise.Finish;
+
+                for (int i = 0; i < addUsers.Count; i++)
+                {
+                    // Add the users to the exercise
+                    ApplicationUser user = db.Users.Find(addUsers[i]);
+                    exercise.Users.Add(user); 
+                }
+
+                for(int i = 0; i < removeUsers.Count; i++)
+                {
+                    // Remove the users from the exercise
+                    ApplicationUser user = db.Users.Find(removeUsers[i]);
+                    exercise.Users.Remove(user);
+                }
 
                 db.SaveChanges();
                 TempData["message"] = "Exercitiul a fost modificat";
@@ -196,20 +259,23 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Organizer,Admin")]
         public ActionResult Delete(int id)
         {
+            // Get the exercise we want to delete
             Exercise? exercise = db.Exercises.Include("Workout").FirstOrDefault(e => e.Id == id);
+
             if (exercise == null)
             {
                 return Content("Exercitiul nu exista in baza de date!");
             }
+
             if (exercise.Workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
-                
+
+                // Get the workout id for redirecting after the exercise is deleted
                 int? w_id = exercise.WorkoutId;  // Cannot convert from int? to int
                 db.Exercises.Remove(exercise);
                 db.SaveChanges();
                 TempData["message"] = "Articolul a fost sters";
                 return Redirect("/Workouts/Show/" + w_id);
-                
                 
             }
             else
@@ -220,7 +286,6 @@ namespace RepReady.Controllers
             }
                 
         }
-
 
     }
 }
