@@ -21,66 +21,41 @@ namespace RepReady.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public IActionResult New(Comment comm)
-        //{
-        //    comm.Date = DateTime.Now;
-        //    comm.WasEdited = false;
-
-        //    try
-        //    {
-        //        db.Comments.Add(comm);
-        //        db.SaveChanges();
-        //        return Redirect("/Exercises/Show/" + comm.ExerciseId);
-        //    }
-
-        //    catch (Exception)
-        //    {
-        //        return Redirect("/Exercises/Show/" + comm.ExerciseId);
-        //    }
-
-        //}
-
 
         [HttpPost]
-        [Authorize(Roles = "User,Editor,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Delete(int id)
         {
             Comment comm = db.Comments.Find(id);
+            int exerciseId = comm.ExerciseId;
 
-            if(comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
                 db.Comments.Remove(comm);
                 db.SaveChanges();
-                return Redirect("/Exercises/Show/" + comm.ExerciseId);
+                return Redirect("/Exercises/Show/" + exerciseId);
             }
             else
             {
                 TempData["message"] = "Nu aveti dreptul sa stergeti comentariul";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Workouts");
+                return Redirect("/Exercises/Show/" + exerciseId);
             }
             
         }
 
-        [Authorize(Roles = "User,Editor,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id)
         {
             Comment comm = db.Comments.Find(id);
-
-
+            
             if (comm == null)
             {
                 TempData["message"] = "Comentariul nu a fost găsit.";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index", "Workouts");
             }
-
+            int exerciseId = comm.ExerciseId;
 
             if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
@@ -90,12 +65,12 @@ namespace RepReady.Controllers
             {
                 TempData["message"] = "Nu aveti dreptul sa editati comentariul";
                 TempData["messageType"] = "alert-danger";
-                return RedirectToAction("Index", "Workouts");
+                return Redirect("/Exercises/Show/" + exerciseId);
             }
         }
 
         [HttpPost]
-        [Authorize(Roles = "User,Editor,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id, Comment requestComment)
         {
             Comment comm = db.Comments.Find(id);

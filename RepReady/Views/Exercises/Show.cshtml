@@ -1,12 +1,5 @@
 ﻿@model RepReady.Models.Exercise
 
-@* Navigation buttons *@
-<div class="d-flex justify-content-center">
-    <a class="btn btn-outline-success" href="/Exercises/Index/">Afisare exercitii</a>
-    <a class="btn btn-outline-success" href="/Exercises/New">Adauga exercitiu</a>
-</div>
-
-<br />
 
 @* Exercise details card *@
 <div class="card">
@@ -28,8 +21,7 @@
     <hr />
 
     <div class="d-flex flex-row justify-content-between">
-      <!--  <a class="btn btn-success" href="/Exercises/Edit/@Model.Id">Editeaza exercitiu</a> -->
-        <a class="btn btn-success asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează comentariul</a>
+        <a class="btn btn-success" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează exercițiul</a>
 
         <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id">
             <button class="btn btn-danger" type="submit">Sterge exercitiu</button>

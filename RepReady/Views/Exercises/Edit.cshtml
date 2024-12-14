@@ -63,14 +63,8 @@
     <br />
 
     <!-- Workout Selection -->
-    <div>
-        <label asp-for="WorkoutId" class="form-label">Antrenament</label><br />
-        <select asp-for="WorkoutId" class="form-control" required>
-            <option value="" disabled selected>Selectează antrenamentul</option>
-            <option value="1">Upper Body Strength</option>
-            <option value="2">Morning Cardio</option>
-        </select>
-        <span asp-validation-for="WorkoutId" class="text-danger"></span>
+    <div class="form-group">
+        <input type="hidden" name="WorkoutId" value="@ViewBag.WorkoutId" />
     </div>
     <br />
 

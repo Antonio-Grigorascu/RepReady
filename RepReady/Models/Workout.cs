@@ -24,11 +24,10 @@ namespace RepReady.Models
         [Required(ErrorMessage = "Categoria este obligatorie")]
         public int? CategoryId { get; set; }
 
-        public string? OrganizerId { get; set; }
+        public string? CreatorId { get; set; }
 
         public virtual Category? Category { get; set; }
 
-        //public virtual ApplicationUser? Organizer { get; set; } // Organizatorul face CRUD
 
         public virtual ICollection<Exercise>? Exercises { get; set; }
 

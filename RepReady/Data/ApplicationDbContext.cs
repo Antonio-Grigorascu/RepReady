@@ -39,7 +39,7 @@ namespace RepReady.Data
                     Duration = 60,
                     Date = new DateTime(2024, 12, 5),
                     CategoryId = 1,
-                    OrganizerId = "organizer1"
+                    CreatorId = "organizer1"
                 },
                 new Workout
                 {
@@ -49,7 +49,7 @@ namespace RepReady.Data
                     Duration = 45,
                     Date = new DateTime(2024, 12, 6),
                     CategoryId = 2,
-                    OrganizerId = "organizer2"
+                    CreatorId = "organizer2"
                 }
             );
 
