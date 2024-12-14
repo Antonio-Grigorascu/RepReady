@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using RepReady.Data;
 using RepReady.Models;
@@ -20,68 +21,82 @@ namespace RepReady.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
-        //public IActionResult Index()
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public IActionResult New(Comment comm)
-        //{
-        //    comm.Date = DateTime.Now;
-        //    comm.WasEdited = false;
-
-        //    try
-        //    {
-        //        db.Comments.Add(comm);
-        //        db.SaveChanges();
-        //        return Redirect("/Exercises/Show/" + comm.ExerciseId);
-        //    }
-
-        //    catch (Exception)
-        //    {
-        //        return Redirect("/Exercises/Show/" + comm.ExerciseId);
-        //    }
-
-        //}
-
 
         [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Delete(int id)
         {
             Comment comm = db.Comments.Find(id);
-            db.Comments.Remove(comm);
-            db.SaveChanges();
-            return Redirect("/Exercises/Show/" + comm.ExerciseId);
+            int exerciseId = comm.ExerciseId;
+
+            if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                db.Comments.Remove(comm);
+                db.SaveChanges();
+                return Redirect("/Exercises/Show/" + exerciseId);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa stergeti comentariul";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Exercises/Show/" + exerciseId);
+            }
+            
         }
 
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id)
         {
             Comment comm = db.Comments.Find(id);
             
-            return View(comm);
+            if (comm == null)
+            {
+                TempData["message"] = "Comentariul nu a fost găsit.";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index", "Workouts");
+            }
+            int exerciseId = comm.ExerciseId;
+
+            if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                return View(comm);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa editati comentariul";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Exercises/Show/" + exerciseId);
+            }
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id, Comment requestComment)
         {
             Comment comm = db.Comments.Find(id);
 
-            if (ModelState.IsValid)
+            if (comm.UserId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
+                if (ModelState.IsValid)
+                {
+                    comm.Content = requestComment.Content;
+                    comm.WasEdited = true;
 
-                comm.Content = requestComment.Content;
-                comm.WasEdited = true;
+                    db.SaveChanges();
 
-                db.SaveChanges();
-
-                return Redirect("/Exercises/Show/" + comm.ExerciseId);
+                    return Redirect("/Exercises/Show/" + comm.ExerciseId);
+                }
+                else
+                {
+                    return View(requestComment);
+                }
             }
             else
             {
-                return View(requestComment);
+                TempData["message"] = "Nu aveti dreptul sa editati comentariul";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index", "Workouts");
             }
-
         }
 
 

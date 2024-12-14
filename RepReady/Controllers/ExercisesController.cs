@@ -1,7 +1,9 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using RepReady.Data;
 using RepReady.Models;
 using static System.Runtime.InteropServices.JavaScript.JSType;
@@ -14,9 +16,9 @@ namespace RepReady.Controllers
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
         public ExercisesController(
-        ApplicationDbContext context,
-        UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager
+            ApplicationDbContext context,
+            UserManager<ApplicationUser> userManager,
+            RoleManager<IdentityRole> roleManager
         )
         {
             db = context;
@@ -24,70 +26,34 @@ namespace RepReady.Controllers
             _roleManager = roleManager;
         }
 
-        [NonAction]
-        public Exercise[] GetExercises()
+
+
+        [Authorize(Roles = "User,Organizer,Admin")]
+        public IActionResult Show(int id)
         {
-            Exercise[] exercises = new Exercise[3];
+            Exercise exercise = db.Exercises
+                                .Include(e => e.Comments) // Include Comments
+                                .ThenInclude(c => c.User) // Include User for each Comment
+                                .FirstOrDefault(e => e.Id == id);
 
-            for(int i = 0; i < 3; i++)
-            {
-                Exercise exercise = new Exercise();
-                exercise.Id = i;
-
-                exercise.Title = "Exercise " + (i + 1).ToString();
-                exercise.Description = "Description " + (i + 1).ToString();
-                exercise.Reps = 10;
-                exercise.Sets = 4;
-                exercise.Status = false;
-                exercise.Start = System.DateTime.Now;
-                exercise.Finish = System.DateTime.Now;
-                exercises[i] = exercise;
-
-            }
-            return exercises;
-        }
-
-
-
-        public IActionResult Index()
-        {
-            //var exercises = from exercise in db.Exercises
-            //                select exercise;
-
-            var exercise = db.Exercises;
-
-            ViewBag.Exercises = exercise;
-
-            return View();
-        }
-
-        public IActionResult Show(int? id)
-        {
-            //Exercise? exercises = db.Exercises.Find(id);
-
-
-
-            //if (exercises == null)
-            //{
-            //    ViewBag.ErrorMessage = "Exercise not found.";
-            //    return View("Error");
-            //}
-            //ViewBag.Exercise = exercises;
-            //ViewBag.PageName = "Show";
-            //return View();
-
-            Exercise exercise = db.Exercises.Include("Comments").Where(e => e.Id == id).First();
-
-            //ViewBag.Exercise = exercise;
             return View(exercise);
         }
 
         [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Show([FromForm] Comment comment)
         {
             comment.Date = System.DateTime.Now;
             comment.WasEdited = false;
             comment.UserId = _userManager.GetUserId(User);
+
+            // Check if the user is logged in and the UserId is not null
+            if (string.IsNullOrEmpty(comment.UserId))
+            {
+                TempData["message"] = "Utilizatorul nu este autentificat. Încercați să vă autentificați din nou.";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index", "Workouts");
+            }
 
             if (ModelState.IsValid)
             {
@@ -97,43 +63,57 @@ namespace RepReady.Controllers
             }
             else
             {
+                // FOR DEBUG
                 Console.WriteLine("EROARE");
                 foreach (var modelState in ModelState.Values)
                 {
                     foreach (var error in modelState.Errors)
                     {
-                        Console.WriteLine(error.ErrorMessage); // Log or debug this
+                        Console.WriteLine(error.ErrorMessage);
                     }
                 }
 
-                Exercise exercise = db.Exercises.Include("Comments")
-                                                .Where(exercise => exercise.Id == comment.ExerciseId)
-                                                .First();
+                Exercise exercise = db.Exercises
+                                    .Include(e => e.Comments)        // Include comments
+                                    .ThenInclude(c => c.User)        // Include the User for each comment
+                                    .FirstOrDefault(e => e.Id == comment.ExerciseId);
 
-                //return Redirect("/Exercises/Show/" + comment.ExerciseId);
+                TempData["message"] = "Eroare de validare! Verificați câmpurile introduse.";
+                TempData["messageType"] = "alert-danger";
+
                 return View(exercise);
             }
         }
 
 
         [HttpGet]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult New()
         {
-            var workouts = db.Workouts.Select(w => new
+            int w_id = TempData["workoutId"] == null ? 0 : (int)TempData["workoutId"];
+            Workout workout = db.Workouts.Where(workout => workout.Id == w_id)
+                                         .First();
+
+
+            if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
-                w.Id,
-                w.Name
-            }).ToList();
+                ViewBag.Workout = workout;
 
-            ViewBag.Workouts = new SelectList(workouts, "Id", "Name");
-
-            Exercise exercise = new Exercise();
-            return View(exercise);
+                Exercise exercise = new Exercise();
+                return View(exercise);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa adăugați un exercițiu într-un antrenament care nu va apartine";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Workouts/Show/" + workout.Id);
+            }
         }
 
 
         // se adauga in baza de date
         [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult New(Exercise exercise)
         {
             
@@ -146,46 +126,51 @@ namespace RepReady.Controllers
             }
             else
             {
+                // FOR DEBUG
                 foreach (var modelState in ModelState.Values)
                 {
                     foreach (var error in modelState.Errors)
                     {
-                        Console.WriteLine(error.ErrorMessage); // Log or debug this
+                        Console.WriteLine(error.ErrorMessage);
                     }
                 }
-
-                var workouts = db.Workouts.Select(w => new
-                {
-                    w.Id,
-                    w.Name
-                }).ToList();
-                ViewBag.Workouts = new SelectList(workouts, "Id", "Name");
 
                 return View(exercise);
             }
         }
 
-        public IActionResult Edit(int? id)
+        [Authorize(Roles = "User,Organizer,Admin")]
+        public IActionResult Edit(int id)
         {
-            //Exercise? exercise = db.Exercises.Find(id);
-            var exercise = db.Exercises.FirstOrDefault(e => e.Id == id);
+            Exercise? exercise = db.Exercises.Include("Workout").FirstOrDefault(e => e.Id == id);
 
             if (exercise == null)
             {
-                return Content("Articolul nu exista in baza de date!");
+                return Content("Exercitiul nu exista in baza de date!");
             }
 
+            if (exercise.Workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                ViewBag.WorkoutId = exercise.WorkoutId;
+                return View(exercise);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra acestui exercitiu care nu va apartine";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Workouts/Show/" + exercise.WorkoutId);
+            }
+                
             
-            return View(exercise);
         }
 
-        // Se adauga comentariul modifcat in baza de date
         [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public ActionResult Edit(int id, Exercise requestExercise)
         {
             Exercise exercise = db.Exercises.Find(id);
 
-            if(ModelState.IsValid) // problema cu validarea
+            if(ModelState.IsValid)
             {
                 exercise.Title = requestExercise.Title;
                 exercise.Description = requestExercise.Description;
@@ -196,8 +181,8 @@ namespace RepReady.Controllers
                 exercise.Finish = requestExercise.Finish;
 
                 db.SaveChanges();
-                TempData["message"] = "Articolul a fost modificat";
-                return RedirectToAction("Index");
+                TempData["message"] = "Exercitiul a fost modificat";
+                return Redirect("/Workouts/Show/" + exercise.WorkoutId);
             }
             else
             {
@@ -208,21 +193,32 @@ namespace RepReady.Controllers
 
 
         [HttpPost]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public ActionResult Delete(int id)
         {
-            Exercise? exercise = db.Exercises.Find(id);
-
-            if (exercise != null)
+            Exercise? exercise = db.Exercises.Include("Workout").FirstOrDefault(e => e.Id == id);
+            if (exercise == null)
             {
+                return Content("Exercitiul nu exista in baza de date!");
+            }
+            if (exercise.Workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            {
+                
+                int? w_id = exercise.WorkoutId;  // Cannot convert from int? to int
                 db.Exercises.Remove(exercise);
                 db.SaveChanges();
                 TempData["message"] = "Articolul a fost sters";
-                return RedirectToAction("Index");
+                return Redirect("/Workouts/Show/" + w_id);
+                
+                
             }
             else
             {
-                return StatusCode(StatusCodes.Status404NotFound);
+                TempData["message"] = "Nu aveti dreptul sa stergeti un exercitiu care nu va apartine";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index", "Workouts");
             }
+                
         }
 
 

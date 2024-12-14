@@ -21,7 +21,11 @@
 
 <br />
 
-
+@if(ViewBag.Exercises == null)
+{
+    <h2 class="alert-success p-3 rounded-3 text-center mb-5">Nu exista exercitii de afisat</h2>
+}
+else{
 @foreach (var exercise in ViewBag.Exercises)
 {
     <div class="card">
@@ -50,5 +54,7 @@
     <br />
     <br />
 }
+}
+
 
 

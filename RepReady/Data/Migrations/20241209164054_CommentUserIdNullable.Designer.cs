@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepReady.Data;
 
@@ -11,9 +12,11 @@ using RepReady.Data;
 namespace RepReady.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241209164054_CommentUserIdNullable")]
+    partial class CommentUserIdNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -362,6 +365,7 @@ namespace RepReady.Data.Migrations
                         .HasColumnType("nvarchar(100)");
 
                     b.Property<int?>("WorkoutId")
+                        .IsRequired()
                         .HasColumnType("int");
 
                     b.HasKey("Id");
@@ -409,9 +413,6 @@ namespace RepReady.Data.Migrations
                         .IsRequired()
                         .HasColumnType("int");
 
-                    b.Property<string>("CreatorId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
@@ -427,6 +428,9 @@ namespace RepReady.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("OrganizerId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
@@ -438,21 +442,21 @@ namespace RepReady.Data.Migrations
                         {
                             Id = 1,
                             CategoryId = 1,
-                            CreatorId = "organizer1",
                             Date = new DateTime(2024, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Workout focusing on upper body strength",
                             Duration = 60,
-                            Name = "Upper Body Strength"
+                            Name = "Upper Body Strength",
+                            OrganizerId = "organizer1"
                         },
                         new
                         {
                             Id = 2,
                             CategoryId = 2,
-                            CreatorId = "organizer2",
                             Date = new DateTime(2024, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
                             Description = "Morning cardio workout to get your heart pumping",
                             Duration = 45,
-                            Name = "Morning Cardio"
+                            Name = "Morning Cardio",
+                            OrganizerId = "organizer2"
                         });
                 });
 
@@ -558,7 +562,9 @@ namespace RepReady.Data.Migrations
                 {
                     b.HasOne("RepReady.Models.Workout", "Workout")
                         .WithMany("Exercises")
-                        .HasForeignKey("WorkoutId");
+                        .HasForeignKey("WorkoutId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
 
                     b.Navigation("Workout");
                 });

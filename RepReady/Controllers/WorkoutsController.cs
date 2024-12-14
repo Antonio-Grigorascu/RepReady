@@ -48,6 +48,10 @@ namespace RepReady.Controllers
                                          .Include("Users")
                                          .Where(workout => workout.Id == id)
                                          .First();
+
+            ApplicationUser user = db.Users.Where(u => u.Id == workout.CreatorId).First();
+            ViewBag.CreatorName = user.UserName;
+
             SetAccessRights();
             if (TempData.ContainsKey("message"))
             {
@@ -57,32 +61,8 @@ namespace RepReady.Controllers
             return View(workout);
         }
 
-        [HttpPost]
-        [Authorize(Roles = "User,Organizer,Admin")]
-        public IActionResult Show([FromForm] Exercise ex)
-        {
-            if (ModelState.IsValid)
-            {
-                db.Exercises.Add(ex);
-                db.SaveChanges();
-                return Redirect("/Workouts/Show/" + ex.WorkoutId);
-            }
-            else
-            {
-                Workout workout = db.Workouts.Include("Category")
-                                             .Include("Users")
-                                             .Include("Exercises")
-                                             .Include("Exercises.Comments")
-                                             .Include("Exercises.Comments.User")
-                                             .Where(workout => workout.Id == ex.WorkoutId)
-                                             .First();
-                //return Redirect("/Workouts/Show/" + ex.WorkoutId);
-                SetAccessRights();
-                return View(workout);
-            }
-        }
 
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult New()
         {
             Workout workout = new Workout();
@@ -91,11 +71,11 @@ namespace RepReady.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult New(Workout workout)
         {
             workout.Date = DateTime.Now;
-            workout.OrganizerId = _userManager.GetUserId(User);
+            workout.CreatorId = _userManager.GetUserId(User);
             if (ModelState.IsValid)
             {
                 db.Workouts.Add(workout);
@@ -111,33 +91,33 @@ namespace RepReady.Controllers
             }
         }
 
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult Edit(int id)
         {
             Workout workout = db.Workouts.Include("Category")
                                          .Where(workout => workout.Id == id)
                                          .First();
             workout.Categ = GetAllCategories();
-            if (workout.OrganizerId == _userManager.GetUserId(User) ||User.IsInRole("Admin"))
+            if (workout.CreatorId == _userManager.GetUserId(User) ||User.IsInRole("Admin"))
             {
                 return View(workout);
             }
             else
             { 
-                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra acestui antrenament care nu va apworkoutine";
+                TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra acestui antrenament care nu va apartine";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
         }
 
         [HttpPost]
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Admin")]
         public IActionResult Edit(int id, Workout requestWorkout)
         {
             Workout workout = db.Workouts.Find(id);
             if (ModelState.IsValid)
             {
-                if (workout.OrganizerId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+                if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
                 {
                     workout.Name = requestWorkout.Name;
                     workout.Description = requestWorkout.Description;
@@ -151,7 +131,7 @@ namespace RepReady.Controllers
                 }
                 else
                 {
-                    TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui antrenament care nu va apworkoutine";
+                    TempData["message"] = "Nu aveti dreptul sa faceti modificari asupra unui antrenament care nu va apartine";
                     TempData["messageType"] = "alert-danger";
                     return RedirectToAction("Index");
                 }
@@ -164,14 +144,14 @@ namespace RepReady.Controllers
         }
 
         [HttpPost]
-        [Authorize(Roles = "Organizer,Admin")]
+        [Authorize(Roles = "User,Admin")]
         public ActionResult Delete(int id)
         {
             Workout workout = db.Workouts.Include("Exercises")
                                          .Include("Exercises.Comments")  
                                          .Where(workout => workout.Id == id)
                                          .First();
-            if (workout.OrganizerId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
                 db.Workouts.Remove(workout);
                 db.SaveChanges();
@@ -181,7 +161,7 @@ namespace RepReady.Controllers
             }
             else
             {
-                TempData["message"] = "Nu aveti dreptul sa stergeti un antrenament care nu va apworkoutine";
+                TempData["message"] = "Nu aveti dreptul sa stergeti un antrenament care nu va apartine";
                 TempData["messageType"] = "alert-danger";
                 return RedirectToAction("Index");
             }
@@ -192,10 +172,10 @@ namespace RepReady.Controllers
         {
             ViewBag.UserCurent = _userManager.GetUserId(User);
             ViewBag.EsteAdmin = User.IsInRole("Admin");
-            ViewBag.AfisareButoane = false;
+            ViewBag.EsteOrganizer = false;
             if (User.IsInRole("Organizer"))
             {
-                ViewBag.AfisareButoane = true;
+                ViewBag.EsteOrganizer = true;
             }
         }
 

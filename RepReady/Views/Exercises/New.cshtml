@@ -1,8 +1,6 @@
 ﻿@model RepReady.Models.Exercise
 <h2>Formular adăugare exercițiu</h2>
-@{
-    ViewData["Title"] = "Add Exercise";
-}
+
 <br />
 
 <form method="post" asp-action="New" asp-controller="Exercises">
@@ -69,12 +67,10 @@
     <br />
 
     <!-- Workout Selection -->
-    <div class="form-group">
-        <label asp-for="WorkoutId">Antrenament</label><br />
-        <select asp-for="WorkoutId" asp-items="ViewBag.Workouts" class="form-control">
-            <option value="" disabled selected>Selectează antrenamentul</option>
-        </select>
-        <span asp-validation-for="WorkoutId" class="text-danger"></span>
+
+    
+   <div class="form-group"> 
+        <input type="hidden" name="WorkoutId" value="@ViewBag.Workout.Id" />
     </div>
 
     <br />
