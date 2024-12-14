@@ -66,6 +66,25 @@
     </div>
     <br />
 
+    <!-- Multiple choice users -->
+    <div class="form-group">
+        <label>Utilizatori</label><br />
+
+        @foreach (var user in ViewBag.Users)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="UsersIdList" value="@user.Id" id="user_@user.Id" />
+                <label class="form-check-label" for="user_@user.Id">
+                    @user.UserName
+                </label>
+            </div>
+        }
+
+        <!-- <span asp-validation-for="Users" class="text-danger"></span> -->
+    </div>
+
+
+
     <!-- Workout Selection -->
 
     

@@ -32,6 +32,12 @@
 <br />
 <br />
 
+@foreach (var user in Model.Users)
+{
+    <p>@user.UserName</p>
+    <br />
+}
+
 @* Display comments section *@
 @foreach (var comm in Model.Comments)
 {

@@ -18,6 +18,8 @@ namespace RepReady.Data
         public DbSet<Comment> Comments { get; set; }
         public DbSet<Workout> Workouts { get; set; }
 
+        public DbSet<WorkoutInvitation> WorkoutInvitations { get; set; }
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
