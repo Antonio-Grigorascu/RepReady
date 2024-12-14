@@ -28,10 +28,30 @@ namespace RepReady.Controllers
         public IActionResult Index()
         {
 
-            var workouts = db.Workouts.Include("Category")
-                                      .Include("Users")        
-                                      .OrderByDescending(a => a.Date);
+            var userId = _userManager.GetUserId(User);
+
+            // Select workouts created by the current user
+            var workoutsCreated = db.Workouts
+                .Include(w => w.Category)
+                .Include(w => w.Users)
+                .Where(w => w.CreatorId == userId)
+                .ToList();
+
+            // Select workouts in which the current user is participating
+            var workoutsParticipating = db.Users
+                .Include(u => u.Workouts)
+                .ThenInclude(w => w.Category)
+                .Where(u => u.Id == userId)
+                .FirstOrDefault()?.Workouts
+                .ToList() ?? new List<Workout>(); // In case the user has no workouts we return an empty list
+
+            // List of all workouts
+            var workouts = workoutsCreated.Concat(workoutsParticipating)
+                                          .ToList();
+
+            // Pass the workouts to the view for display
             ViewBag.Workouts = workouts;
+
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
@@ -49,10 +69,14 @@ namespace RepReady.Controllers
                                          .Where(workout => workout.Id == id)
                                          .First();
 
+            // Get the creator of the workout
             ApplicationUser user = db.Users.Where(u => u.Id == workout.CreatorId).First();
+
+            // Pass the creator's name to the view for display (in partial)
             ViewBag.CreatorName = user.UserName;
 
-            SetAccessRights();
+            SetAccessRights(); // For button visibility
+
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
@@ -75,7 +99,10 @@ namespace RepReady.Controllers
         public IActionResult New(Workout workout)
         {
             workout.Date = DateTime.Now;
+
+            // The user that creates the workout is the current user
             workout.CreatorId = _userManager.GetUserId(User);
+
             if (ModelState.IsValid)
             {
                 db.Workouts.Add(workout);
@@ -97,7 +124,9 @@ namespace RepReady.Controllers
             Workout workout = db.Workouts.Include("Category")
                                          .Where(workout => workout.Id == id)
                                          .First();
+
             workout.Categ = GetAllCategories();
+
             if (workout.CreatorId == _userManager.GetUserId(User) ||User.IsInRole("Admin"))
             {
                 return View(workout);
@@ -115,6 +144,7 @@ namespace RepReady.Controllers
         public IActionResult Edit(int id, Workout requestWorkout)
         {
             Workout workout = db.Workouts.Find(id);
+
             if (ModelState.IsValid)
             {
                 if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
@@ -147,10 +177,11 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Admin")]
         public ActionResult Delete(int id)
         {
-            Workout workout = db.Workouts.Include("Exercises")
-                                         .Include("Exercises.Comments")  
+            Workout workout = db.Workouts.Include("Exercises") // Include exercises for delete in cascade
+                                         .Include("Exercises.Comments")  // Include comments for delete in cascade
                                          .Where(workout => workout.Id == id)
                                          .First();
+
             if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
                 db.Workouts.Remove(workout);
@@ -170,6 +201,7 @@ namespace RepReady.Controllers
         [NonAction]
         private void SetAccessRights()
         {
+            // For button visibility
             ViewBag.UserCurent = _userManager.GetUserId(User);
             ViewBag.EsteAdmin = User.IsInRole("Admin");
             ViewBag.EsteOrganizer = false;
@@ -182,6 +214,7 @@ namespace RepReady.Controllers
         [NonAction]
         public IEnumerable<SelectListItem> GetAllCategories()
         {
+            // For listing them in form (as dropdown list)
             var selectList = new List<SelectListItem>();
             var categories = from cat in db.Categories
                              select cat;
