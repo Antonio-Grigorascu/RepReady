@@ -1,12 +1,5 @@
 ﻿@model RepReady.Models.Exercise
 
-@* Navigation buttons *@
-<div class="d-flex justify-content-center">
-    <a class="btn btn-outline-success" href="/Exercises/Index/">Afisare exercitii</a>
-    <a class="btn btn-outline-success" href="/Exercises/New">Adauga exercitiu</a>
-</div>
-
-<br />
 
 @* Exercise details card *@
 <div class="card">
@@ -18,16 +11,28 @@
         <div class="d-flex justify-content-between flex-row mt-5">
             <span class="alert-success">Repetari: @Model.Reps</span>
             <span class="alert-success">Seturi: @Model.Sets</span>
-            <span class="alert-success">Status: @(Model.Status == true ? "Activ" : "Inactiv")</span>
+            <span class="alert-success">Status: @(Model.Status == true ? "Complete" : "Incomplet")</span>
             <span class="alert-success">Start: @Model.Start.ToString("g")</span>
             <span class="alert-success">Finish: @Model.Finish.ToString("g")</span>
+
         </div>
     </div>
 
     <hr />
 
     <div class="d-flex flex-row justify-content-between">
-        <a class="btn btn-success" href="/Exercises/Edit/@Model.Id">Editeaza exercitiu</a>
+        <a class="btn btn-success" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează exercițiul</a>
+
+        <form method="post" asp-controller="Exercises" asp-action="Complete" asp-route-id="@Model.Id">
+            @if (Model.Status == false)
+            {
+                <button class="btn btn-success" type="submit">Am terminat</button>
+            }
+            else
+            {
+                <button class="btn btn-danger" type="submit">Again</button>
+            }
+        </form>
 
         <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id">
             <button class="btn btn-danger" type="submit">Sterge exercitiu</button>
@@ -37,6 +42,11 @@
 
 <br />
 <br />
+
+@foreach (var user in Model.Users)
+{
+    <p>@user.UserName</p>
+}
 
 @* Display comments section *@
 @foreach (var comm in Model.Comments)
@@ -49,6 +59,7 @@
                 <div>
                     <p>@comm.Content</p>
                     <small>@comm.Date</small>
+                    <strong><i class="bi bi-person"></i>@comm.User.UserName</strong>
                     @if(@comm.WasEdited == true)
                     {
                         <small>Edited</small>
@@ -57,21 +68,23 @@
                 </div>
                 <br>
 
-                <div class="d-flex">
-                    <div>
-                        <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-itemid="@comm.Id">
+                
+                    <div class="d-flex">
+                        <div>
+                        <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
                             <i class="bi bi-pencil-square"></i>Editeaza
                         </a>
-                    </div>
+                        </div>
 
-                    <div>
-                        <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
-                            <button class="btn btn-outline-danger" type="submit">
-                                <i class="bi bi-trash"></i>Sterge
-                            </button>
-                        </form>
+                        <div>
+                            <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
+                                <button class="btn btn-outline-danger" type="submit">
+                                    <i class="bi bi-trash"></i>Sterge
+                                </button>
+                            </form>
+                        </div>
                     </div>
-                </div>
+                
 
                 <br />
             </div>

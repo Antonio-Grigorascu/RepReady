@@ -1,0 +1,28 @@
+﻿
+<h1>Workout Invitations</h1>
+
+@if (TempData["message"] != null)
+{
+    <div class="alert @ViewBag.Alert p-3 rounded-3 text-center mb-5">
+        @ViewBag.Message
+    </div>
+}
+<br />
+
+@foreach(var invitation in ViewBag.Invitations)
+{
+    @if(invitation.Accepted == false)
+    {
+        <div class="d-flex flex-row justify-content-between">
+            <h1>Invitație</h1>
+            <p>@invitation.WorkoutName</p>
+            <p>@invitation.InvitedBy</p>
+            <form method="post" asp-action="Accept" asp-controller="WorkoutInvitations" asp-route-id="@invitation.Id">
+                <button type="submit" class="btn btn-success">Accept</button>
+            </form>
+        </div>
+    }
+    
+
+    
+}

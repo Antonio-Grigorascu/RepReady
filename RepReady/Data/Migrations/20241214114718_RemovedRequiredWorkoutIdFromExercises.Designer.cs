@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepReady.Data;
 
@@ -11,9 +12,11 @@ using RepReady.Data;
 namespace RepReady.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241214114718_RemovedRequiredWorkoutIdFromExercises")]
+    partial class RemovedRequiredWorkoutIdFromExercises
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -275,6 +278,23 @@ namespace RepReady.Data.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("Categories");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Name = "Strength"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Name = "Cardio"
+                        },
+                        new
+                        {
+                            Id = 3,
+                            Name = "Flexibility"
+                        });
                 });
 
             modelBuilder.Entity("RepReady.Models.Comment", b =>
@@ -319,9 +339,6 @@ namespace RepReady.Data.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
 
-                    b.Property<string>("CreatorId")
-                        .HasColumnType("nvarchar(max)");
-
                     b.Property<string>("Description")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
@@ -355,6 +372,32 @@ namespace RepReady.Data.Migrations
                     b.HasIndex("WorkoutId");
 
                     b.ToTable("Exercises");
+
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            Description = "A standard push-up exercise for chest and triceps.",
+                            Finish = new DateTime(2024, 12, 5, 9, 30, 0, 0, DateTimeKind.Unspecified),
+                            Reps = 10,
+                            Sets = 3,
+                            Start = new DateTime(2024, 12, 5, 9, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = true,
+                            Title = "Push-Up",
+                            WorkoutId = 1
+                        },
+                        new
+                        {
+                            Id = 2,
+                            Description = "A 5km run for cardio endurance.",
+                            Finish = new DateTime(2024, 12, 6, 7, 45, 0, 0, DateTimeKind.Unspecified),
+                            Reps = 1,
+                            Sets = 1,
+                            Start = new DateTime(2024, 12, 6, 7, 0, 0, 0, DateTimeKind.Unspecified),
+                            Status = true,
+                            Title = "Running",
+                            WorkoutId = 2
+                        });
                 });
 
             modelBuilder.Entity("RepReady.Models.Workout", b =>
@@ -368,9 +411,6 @@ namespace RepReady.Data.Migrations
                     b.Property<int?>("CategoryId")
                         .IsRequired()
                         .HasColumnType("int");
-
-                    b.Property<string>("CreatorId")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
@@ -387,46 +427,36 @@ namespace RepReady.Data.Migrations
                         .HasMaxLength(100)
                         .HasColumnType("nvarchar(100)");
 
+                    b.Property<string>("OrganizerId")
+                        .HasColumnType("nvarchar(max)");
+
                     b.HasKey("Id");
 
                     b.HasIndex("CategoryId");
 
                     b.ToTable("Workouts");
-                });
 
-            modelBuilder.Entity("RepReady.Models.WorkoutInvitation", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<bool>("Accepted")
-                        .HasColumnType("bit");
-
-                    b.Property<string>("InvitedBy")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("UserId")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("WorkoutId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("WorkoutName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("UserId");
-
-                    b.HasIndex("WorkoutId");
-
-                    b.ToTable("WorkoutInvitations");
+                    b.HasData(
+                        new
+                        {
+                            Id = 1,
+                            CategoryId = 1,
+                            Date = new DateTime(2024, 12, 5, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Workout focusing on upper body strength",
+                            Duration = 60,
+                            Name = "Upper Body Strength",
+                            OrganizerId = "organizer1"
+                        },
+                        new
+                        {
+                            Id = 2,
+                            CategoryId = 2,
+                            Date = new DateTime(2024, 12, 6, 0, 0, 0, 0, DateTimeKind.Unspecified),
+                            Description = "Morning cardio workout to get your heart pumping",
+                            Duration = 45,
+                            Name = "Morning Cardio",
+                            OrganizerId = "organizer2"
+                        });
                 });
 
             modelBuilder.Entity("ApplicationUserExercise", b =>
@@ -545,25 +575,6 @@ namespace RepReady.Data.Migrations
                         .IsRequired();
 
                     b.Navigation("Category");
-                });
-
-            modelBuilder.Entity("RepReady.Models.WorkoutInvitation", b =>
-                {
-                    b.HasOne("RepReady.Models.ApplicationUser", "User")
-                        .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RepReady.Models.Workout", "Workout")
-                        .WithMany()
-                        .HasForeignKey("WorkoutId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("User");
-
-                    b.Navigation("Workout");
                 });
 
             modelBuilder.Entity("RepReady.Models.ApplicationUser", b =>

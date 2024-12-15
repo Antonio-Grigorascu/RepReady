@@ -34,9 +34,9 @@ namespace RepReady.Models
         [Required(ErrorMessage = "Data de început este obligatorie")]
         public DateTime Finish { get; set; }  // planificate de la inceput
 
-        //public file media 
+        //public file media -- TO DO
 
-        [Required(ErrorMessage = "Antenamentul este obligatoriu")]
+        public string? CreatorId { get; set; }
         public int? WorkoutId { get; set; }
 
         public virtual Workout? Workout { get; set; }
