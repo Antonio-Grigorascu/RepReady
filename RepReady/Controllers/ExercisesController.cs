@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using RepReady.Data;
 using RepReady.Models;
+using System.Net.NetworkInformation;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Threading.Tasks;
 
 namespace RepReady.Controllers
 {
@@ -15,15 +17,18 @@ namespace RepReady.Controllers
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IWebHostEnvironment _env;
         public ExercisesController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            IWebHostEnvironment env
         )
         {
             db = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _env = env;
         }
 
 
@@ -36,6 +41,11 @@ namespace RepReady.Controllers
                                 .Include("Comments")
                                 .Include("Comments.User")  // All includes are for display
                                 .FirstOrDefault(e => e.Id == id);
+
+
+
+            ViewBag.EsteAdmin = User.IsInRole("Admin"); // For displaying the edit and delete buttons
+            ViewBag.CurrentUser = _userManager.GetUserId(User); // For displaying the edit and delete buttons
 
             return View(exercise);
         }
@@ -107,13 +117,14 @@ namespace RepReady.Controllers
             // The users that are part of the workout
             var users = db.Workouts.Include("Users").Where(w => w.Id == w_id).First().Users;
 
-            if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin") || User.IsInRole("Organizer"))
             {
                 ViewBag.Workout = workout;  // For adding the workout id to the exercise (hidden)
                 ViewBag.Users = users;      // For adding the users to the exercise (select checkboxes)
 
                 Exercise exercise = new Exercise();
 
+                ViewBag.ErrorMessage = TempData["errorMessage"];
                 return View(exercise);
             }
             else
@@ -127,12 +138,43 @@ namespace RepReady.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User,Organizer,Admin")]
-        public IActionResult New(Exercise exercise, List<string> UsersIdList) 
+        public async Task<IActionResult> New(Exercise exercise, List<string> UsersIdList)
         {
+
             // UsersIdList is a list of user ids that would be added to the exercise - sent from the form (checkboxes)
 
-            if (ModelState.IsValid)
+            // Adding the image
+            IFormFile Image = exercise.File;
+            if (Image != null && Image.Length > 0)
             {
+                // Check the extension
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".mov" };
+                var fileExtension = Path.GetExtension(Image.FileName).ToLower();
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    ModelState.AddModelError("ExerciseImage", "Fișierul trebuie să fie o imagine(jpg, jpeg, png, gif) sau un video(mp4, mov).");
+                    return View(exercise);
+                }
+
+                // Storage path
+                var storagePath = Path.Combine(_env.WebRootPath, "images", Image.FileName);
+                var databaseFileName = "/images/" + Image.FileName;
+
+                // File saving
+                using (var fileStream = new FileStream(storagePath, FileMode.Create))
+                {
+                    await Image.CopyToAsync(fileStream);
+                }
+                ModelState.Remove(nameof(exercise.Image));
+                exercise.Image = databaseFileName;
+
+            }
+
+
+            if (TryValidateModel(exercise))
+            {
+                exercise.CreatorId = _userManager.GetUserId(User);
+
                 exercise.Users = new List<ApplicationUser>(); // Initialize the list of users for the exercise
                 for (int i = 0; i < UsersIdList.Count; i++)
                 {
@@ -142,24 +184,29 @@ namespace RepReady.Controllers
                 }
 
                 db.Exercises.Add(exercise);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 TempData["message"] = "Exercițiul a fost adaugat";
                 return Redirect("/Workouts/Show/" + exercise.WorkoutId);
             }
             else
             {
                 // FOR DEBUG
+                Console.WriteLine("EROARE -------------------------------------");
                 foreach (var modelState in ModelState.Values)
                 {
                     foreach (var error in modelState.Errors)
                     {
+                        TempData["errorMessage"] =error.ErrorMessage;
                         Console.WriteLine(error.ErrorMessage);
                     }
                 }
 
-                return View(exercise);
+                TempData["workoutId"] = exercise.WorkoutId;
+                
+                return RedirectToAction("New");
             }
         }
+   
 
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id)
@@ -178,7 +225,7 @@ namespace RepReady.Controllers
             // Get the users that are part of the workout
             var users = db.Workouts.Include("Users").Where(w => w.Id == exercise.WorkoutId).First().Users;
 
-            if (exercise.Workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (exercise.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
                 // For adding the workout id to the exercise (hidden)
                 ViewBag.WorkoutId = exercise.WorkoutId;
@@ -189,6 +236,9 @@ namespace RepReady.Controllers
                 // For selecting the users (in the checkboxes) that are already part of the exercise
                 ViewBag.SelectedUsers = exercise.Users.Select(u => u.Id).ToList();
 
+                // For displaying the error messages from the POST method
+                ViewBag.ErrorMessage = TempData["errorMessage"];
+
                 return View(exercise);
             }
             else
@@ -197,8 +247,7 @@ namespace RepReady.Controllers
                 TempData["messageType"] = "alert-danger";
                 return Redirect("/Workouts/Show/" + exercise.WorkoutId);
             }
-                
-            
+               
         }
 
         [HttpPost]
@@ -233,10 +282,10 @@ namespace RepReady.Controllers
                 {
                     // Add the users to the exercise
                     ApplicationUser user = db.Users.Find(addUsers[i]);
-                    exercise.Users.Add(user); 
+                    exercise.Users.Add(user);
                 }
 
-                for(int i = 0; i < removeUsers.Count; i++)
+                for (int i = 0; i < removeUsers.Count; i++)
                 {
                     // Remove the users from the exercise
                     ApplicationUser user = db.Users.Find(removeUsers[i]);
@@ -249,7 +298,18 @@ namespace RepReady.Controllers
             }
             else
             {
-                return View(requestExercise);
+                foreach (var modelState in ModelState.Values)
+                {
+                    foreach (var error in modelState.Errors)
+                    {
+                        TempData["errorMessage"] = error.ErrorMessage;
+                        Console.WriteLine(error.ErrorMessage);
+                    }
+                }
+                //return View(requestExercise);
+                TempData["workoutId"] = exercise.WorkoutId;
+
+                return RedirectToAction("Edit");
             }
         }
 
@@ -267,14 +327,15 @@ namespace RepReady.Controllers
                 return Content("Exercitiul nu exista in baza de date!");
             }
 
-            if (exercise.Workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
+            if (exercise.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
 
                 // Get the workout id for redirecting after the exercise is deleted
                 int? w_id = exercise.WorkoutId;  // Cannot convert from int? to int
                 db.Exercises.Remove(exercise);
                 db.SaveChanges();
-                TempData["message"] = "Articolul a fost sters";
+                TempData["message"] = "Exercitiul a fost sters";
+                TempData["messageType"] = "alert-success";
                 return Redirect("/Workouts/Show/" + w_id);
                 
             }
@@ -285,6 +346,15 @@ namespace RepReady.Controllers
                 return RedirectToAction("Index", "Workouts");
             }
                 
+        }
+
+        [Authorize(Roles = "User,Organizer,Admin")]
+        public ActionResult ChangeStatus(int id) {
+            // Change status of the exercise (complete/incomplete)
+            Exercise exercise = db.Exercises.Where(e => e.Id == id).First();
+            exercise.Status = !exercise.Status;
+            db.SaveChanges();
+            return Redirect("/Exercises/Show/" + exercise.Id);
         }
 
     }

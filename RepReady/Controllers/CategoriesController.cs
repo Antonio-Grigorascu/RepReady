@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RepReady.Data;
@@ -21,6 +22,8 @@ namespace RepReady.Controllers
             _userManager = userManager;
             _roleManager = roleManager;
         }
+
+        [Authorize(Roles = "User,Organizer,Admin")]
         public ActionResult Index()
         {
             if (TempData.ContainsKey("message"))
@@ -31,20 +34,24 @@ namespace RepReady.Controllers
                              orderby category.Name
                              select category;
             ViewBag.Categories = categories;
+            ViewBag.EsteAdmin = User.IsInRole("Admin");
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Show(int id)
         {
             Category category = db.Categories.Find(id);
             return View(category);
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult New()
         {
             return View();
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult New(Category cat)
         {
@@ -61,12 +68,14 @@ namespace RepReady.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         public ActionResult Edit(int id)
         {
             Category category = db.Categories.Find(id);
             return View(category);
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult Edit(int id, Category requestCategory)
         {
@@ -84,6 +93,7 @@ namespace RepReady.Controllers
             }
         }
 
+        [Authorize(Roles = "Admin")]
         [HttpPost]
         public ActionResult Delete(int id)
         {

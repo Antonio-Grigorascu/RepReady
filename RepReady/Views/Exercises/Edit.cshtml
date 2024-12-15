@@ -2,6 +2,12 @@
 
 <h2>Editare exercițiu</h2>
 
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="text-danger">@ViewBag.ErrorMessage</div>
+}
+
+
 <form method="post" asp-action="Edit" asp-controller="Exercises" asp-route-id="@Model.Id">
     <!-- Title -->
     <div>
@@ -62,6 +68,8 @@
     </div>
     <br />
 
+
+
     <!-- Edit users -->
     <!-- Multiple choice users -->
     <div class="form-group">
@@ -77,6 +85,7 @@
                 </label>
             </div>
         }
+        
 
         <!-- <span asp-validation-for="Users" class="text-danger"></span> -->
     </div>

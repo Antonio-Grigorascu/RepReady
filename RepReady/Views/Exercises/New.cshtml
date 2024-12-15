@@ -3,7 +3,13 @@
 
 <br />
 
-<form method="post" asp-action="New" asp-controller="Exercises">
+@if(ViewBag.ErrorMessage != null)
+{
+    <div class="text-danger">@ViewBag.ErrorMessage</div>
+}
+
+
+<form enctype="multipart/form-data" method="post" asp-action="New" asp-controller="Exercises">
     <!-- Title -->
     <div class="form-group">
         <label asp-for="Title">Titlu exercițiu</label>
@@ -66,6 +72,14 @@
     </div>
     <br />
 
+    <!-- Image selector  -->
+    <div class="form-group">
+        <div>
+            <label asp-for="File">Adauga imagine</label><br />
+            <input asp-for="File" class="form-control" type="file" />
+        </div>
+    </div>
+
     <!-- Multiple choice users -->
     <div class="form-group">
         <label>Utilizatori</label><br />
@@ -83,11 +97,7 @@
         <!-- <span asp-validation-for="Users" class="text-danger"></span> -->
     </div>
 
-
-
     <!-- Workout Selection -->
-
-    
    <div class="form-group"> 
         <input type="hidden" name="WorkoutId" value="@ViewBag.Workout.Id" />
     </div>

@@ -10,7 +10,7 @@
 
 <div class="card">
     <partial name="WorkoutInfo" model="Model"></partial>
-    @if (ViewBag.EsteOrganizer == true || Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
+    @if (Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
     {
         <div class="d-flex flex-row justify-content-between">
             <a class="btn btn-success" asp-controller="Workouts" asp-action="Edit" asp-route-id="@Model.Id">Editeaza antrenament</a>
@@ -18,14 +18,17 @@
                 <button class="btn btn-danger" type="submit">Sterge antrenament</button>
             </form>
         </div>
-        @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
-        TempData["workoutId"] = @Model.Id;
-        <a class="btn btn-success" asp-controller="Exercises" asp-action="New">Adauga exercițiu</a>
 
         @* We passed the WorkoutId to the controller to know in which Workout we add the invitation *@
         TempData["workoutId"] = @Model.Id;
         <a class="btn btn-success" asp-controller="WorkoutInvitations" asp-action="New">Invită participanți</a>
         
+    }
+    @if (Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true || ViewBag.EsteOrganizer == true)
+    {
+        @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
+        TempData["workoutId"] = @Model.Id;
+        <a class="btn btn-success" asp-controller="Exercises" asp-action="New">Adauga exercițiu</a>
     }
 </div>
 <br />
@@ -34,7 +37,6 @@
 @foreach(var user in Model.Users)
 {
     <p>@user.UserName</p>
-    <br />
 }
 
 
@@ -66,7 +68,8 @@
     </div>
 
     <br />
-    <br />
+    <br />      
+
 }
 
 

@@ -29,13 +29,16 @@ namespace RepReady.Models
         public bool? Status { get; set; }
 
         [Required(ErrorMessage = "Data de început este obligatorie")]
-        public DateTime Start { get; set; }  // planificate de la inceput
+        public DateTime Start { get; set; }  // In case the user want to plan the workout for the future
 
         [Required(ErrorMessage = "Data de început este obligatorie")]
-        public DateTime Finish { get; set; }  // planificate de la inceput
+        [DateValidation]
+        public DateTime Finish { get; set; }  // In case the user want to plan the workout for the future
 
-        //public file media -- TO DO
+        // path to media file
+        public string? Image { get; set; }
 
+        public string? CreatorId { get; set; }
         public int? WorkoutId { get; set; }
 
         public virtual Workout? Workout { get; set; }
@@ -44,7 +47,8 @@ namespace RepReady.Models
 
         public virtual ICollection<ApplicationUser>? Users { get; set; }
 
-
+        [NotMapped]
+        public IFormFile? File { get; set; }
 
     }
 }
