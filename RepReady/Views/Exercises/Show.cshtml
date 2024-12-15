@@ -7,21 +7,57 @@
         <h3 class="card-title alert-success py-3 px-3 rounded-2">@Model.Title</h3>
 
         <div class="card-text">@Model.Description</div>
+        <div>Creator: <i class="bi bi-person"></i> @ViewBag.CreatorName</div>
 
         <div class="d-flex justify-content-between flex-row mt-5">
             <span class="alert-success">Repetari: @Model.Reps</span>
             <span class="alert-success">Seturi: @Model.Sets</span>
-            <span class="alert-success">Status: @(Model.Status == true ? "Activ" : "Inactiv")</span>
+            @if(ViewBag.Status != null)
+            {
+                <span class="alert-success">Status: @(ViewBag.Status == true ? "Complete" : "Incomplet")</span>
+            }
             <span class="alert-success">Start: @Model.Start.ToString("g")</span>
             <span class="alert-success">Finish: @Model.Finish.ToString("g")</span>
 
         </div>
+
+        <div>
+            @if (Model.Image != null)
+            {
+                @if (Model.Image.Contains(".mp4") || Model.Image.Contains(".mov"))
+                {
+                    <video width="550" height="300" controls>
+                        <source src="@Model.Image" type="video/mp4">
+                        Your browser does not support the video tag.
+                    </video>
+                }
+                else
+                {
+                    <img src="@Model.Image" alt="Article Image" style="width:100%; height: 450px; object-fit: cover" />
+                }
+            }
+        </div>
+
     </div>
 
     <hr />
 
     <div class="d-flex flex-row justify-content-between">
         <a class="btn btn-success" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează exercițiul</a>
+
+        <form method="post" asp-controller="Exercises" asp-action="ChangeStatus" asp-route-ExerciseId="@Model.Id" asp-route-UserId="@ViewBag.CurrentUser">
+           @if(ViewBag.Status != null)
+            {
+                @if (ViewBag.Status == false)
+                {
+                    <button class="btn btn-success" type="submit">Am terminat</button>
+                }
+                else
+                {
+                    <button class="btn btn-danger" type="submit">Again</button>
+                }
+            }
+        </form>
 
         <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id">
             <button class="btn btn-danger" type="submit">Sterge exercitiu</button>
@@ -35,7 +71,6 @@
 @foreach (var user in Model.Users)
 {
     <p>@user.UserName</p>
-    <br />
 }
 
 @* Display comments section *@
@@ -58,12 +93,13 @@
                 </div>
                 <br>
 
-                
+                @if(ViewBag.EsteAdmin == true || ViewBag.CurrentUser == comm.User.Id)
+                {
                     <div class="d-flex">
                         <div>
-                        <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
-                            <i class="bi bi-pencil-square"></i>Editeaza
-                        </a>
+                            <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
+                                <i class="bi bi-pencil-square"></i>Editeaza
+                            </a>
                         </div>
 
                         <div>
@@ -74,7 +110,7 @@
                             </form>
                         </div>
                     </div>
-                
+                }
 
                 <br />
             </div>

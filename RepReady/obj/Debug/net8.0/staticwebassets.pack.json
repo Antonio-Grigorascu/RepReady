@@ -13,6 +13,14 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\bench.jpeg",
+      "PackagePath": "staticwebassets\\images\\bench.jpeg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\cables_on_bench.png",
+      "PackagePath": "staticwebassets\\images\\cables_on_bench.png"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

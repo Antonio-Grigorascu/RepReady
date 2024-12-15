@@ -151,5 +151,20 @@ namespace RepReady.Controllers
             TempData["messageType"] = "alert-success";
             return Redirect("/WorkoutInvitations/Index");
         }
+
+        [HttpPost]
+        public IActionResult Reject(int id) // Reject the invitation
+        { 
+            // Find the invitation by id
+            var invitation = db.WorkoutInvitations.Where(i => i.Id == id).First();
+
+            db.Remove(invitation);
+
+            db.SaveChanges();
+            TempData["message"] = "Invitația a fost respinsă";
+            TempData["messageType"] = "alert-danger";
+            return Redirect("/WorkoutInvitations/Index");
+        }
+
     }
 }
