@@ -9,19 +9,28 @@
 }
 <br />
 
+
 @foreach (RepReady.Models.Category category in ViewBag.Categories)
 {
     <div class="form-group">
-        <label asp-for="@category.Name" class="form-label">Denumire categorie</label>
-        <div><i class="bi bi-globe"></i> @category.Name</div>
+        <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i> @category.Name</div>
     </div>
     <br />
-    <a class="btn alert-success" asp-controller="Categories" asp-action="Show" asp-route-id="@category.Id">Afisare categorie</a>
-    <a class="btn alert-success" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">Editare categorie</a>
+    
+    @if (ViewBag.EsteAdmin == true)
+    {
+        <a class="btn alert-success" asp-controller="Categories" asp-action="Show" asp-route-id="@category.Id">Afisare categorie</a>
+        <a class="btn alert-success" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">Editare categorie</a>
+    }
+    
     <br />
     <br />
 }
 <br />
-<a class="btn btn-success" asp-controller="Categories" asp-action="New">Adauga o noua categorie</a>
+@if(ViewBag.EsteAdmin == true)
+{
+    <a class="btn btn-success" asp-controller="Categories" asp-action="New">Adauga o noua categorie</a>
+}
+
 <br />
 

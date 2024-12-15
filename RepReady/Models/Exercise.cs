@@ -25,17 +25,17 @@ namespace RepReady.Models
         [Range(1, 8, ErrorMessage = "Numarul de seturi trebuie sa fie intre 1 si 8")]
         public int Sets { get; set; }
 
-        [Required(ErrorMessage = "Selectează un status.")]
-        public bool? Status { get; set; }
+        [Required(ErrorMessage = "Data de început este obligatorie")]
+        public DateTime Start { get; set; }  // In case the user want to plan the workout for the future
 
         [Required(ErrorMessage = "Data de început este obligatorie")]
-        public DateTime Start { get; set; }  // planificate de la inceput
+        [DateValidation]
+        public DateTime Finish { get; set; }  // In case the user want to plan the workout for the future
 
-        [Required(ErrorMessage = "Data de început este obligatorie")]
-        public DateTime Finish { get; set; }  // planificate de la inceput
+        // path to media file
+        public string? Image { get; set; }
 
-        //public file media -- TO DO
-
+        public string? CreatorId { get; set; }
         public int? WorkoutId { get; set; }
 
         public virtual Workout? Workout { get; set; }
@@ -44,7 +44,10 @@ namespace RepReady.Models
 
         public virtual ICollection<ApplicationUser>? Users { get; set; }
 
+        public virtual ICollection<ApplicationUserExercise>? UserExercises { get; set; }
 
+        [NotMapped]
+        public IFormFile? File { get; set; }
 
     }
 }

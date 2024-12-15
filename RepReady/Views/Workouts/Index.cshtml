@@ -1,6 +1,20 @@
 ﻿<br />
 <h2 class="text-center">Afisare antrenamente</h2>
 <br />
+
+@if (ViewBag.InvitationsCount > 0)
+{
+    @if (ViewBag.InvitationsCount == 1)
+    {
+        <div class="alert-danger">Aveti o invitație nouă</div>
+    }
+    else
+    {
+        <div class="alert-danger">Aveti @ViewBag.InvitationsCount invitații noi</div>
+    }
+}
+
+
 @if(ViewBag.Message != null)
 {
     <div class="alert-success p-3 rounded-3 text-center mb-5 @ViewBag.Alert">

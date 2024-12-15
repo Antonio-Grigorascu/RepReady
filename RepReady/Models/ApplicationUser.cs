@@ -18,6 +18,8 @@ namespace RepReady.Models
 
         public string? LastName { get; set; }
 
+        public virtual ICollection<ApplicationUserExercise>? UserExercises { get; set; }
+
         [NotMapped]
         public IEnumerable<SelectListItem>? AllRoles { get; set; }
 

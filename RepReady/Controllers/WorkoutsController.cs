@@ -30,33 +30,51 @@ namespace RepReady.Controllers
 
             var userId = _userManager.GetUserId(User);
 
-            // Select workouts created by the current user
-            var workoutsCreated = db.Workouts
-                .Include(w => w.Category)
-                .Include(w => w.Users)
-                .Where(w => w.CreatorId == userId)
-                .ToList();
+            if (User.IsInRole("Admin"))
+            {
+                var workouts = db.Workouts.Include("Category").OrderBy(w => w.Date);
 
-            // Select workouts in which the current user is participating
-            var workoutsParticipating = db.Users
-                .Include(u => u.Workouts)
-                .ThenInclude(w => w.Category)
-                .Where(u => u.Id == userId)
-                .FirstOrDefault()?.Workouts
-                .ToList() ?? new List<Workout>(); // In case the user has no workouts we return an empty list
+                // Pass the workouts to the view for display
+                ViewBag.Workouts = workouts;
+            }
+            else
+            {
 
-            // List of all workouts
-            var workouts = workoutsCreated.Concat(workoutsParticipating)
-                                          .ToList();
+                // Select workouts created by the current user
+                var workoutsCreated = db.Workouts
+                    .Include(w => w.Category)
+                    .Include(w => w.Users)
+                    .Where(w => w.CreatorId == userId)
+                    .ToList();
 
-            // Pass the workouts to the view for display
-            ViewBag.Workouts = workouts;
+                // Select workouts in which the current user is participating
+                var workoutsParticipating = db.Users
+                    .Include(u => u.Workouts)
+                    .ThenInclude(w => w.Category)
+                    .Where(u => u.Id == userId)
+                    .FirstOrDefault()?.Workouts
+                    .ToList() ?? new List<Workout>(); // In case the user has no workouts we return an empty list
+
+                // Set of all workouts order by date
+                var workouts = new HashSet<Workout>(workoutsCreated)
+                                .Union(new HashSet<Workout>(workoutsParticipating))
+                                .OrderBy(w => w.Date)
+                                .ToList();
+
+
+                // Pass the workouts to the view for display
+                ViewBag.Workouts = workouts;
+            }
 
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
                 ViewBag.Alert = TempData["messageType"];
             }
+
+            ViewBag.InvitationsCount = db.WorkoutInvitations
+                                        .Where(wi => wi.UserId == userId && wi.Accepted == false)
+                                        .Count();
             return View();
         }
 
@@ -71,6 +89,9 @@ namespace RepReady.Controllers
 
             // Get the creator of the workout
             ApplicationUser user = db.Users.Where(u => u.Id == workout.CreatorId).First();
+
+            // Order the workout's exercises by start time
+            workout.Exercises = workout.Exercises.OrderBy(exercise => exercise.Start).ToList();
 
             // Pass the creator's name to the view for display (in partial)
             ViewBag.CreatorName = user.UserName;
@@ -105,6 +126,10 @@ namespace RepReady.Controllers
 
             if (ModelState.IsValid)
             {
+                workout.Users = new List<ApplicationUser>();
+                // Add the creator to the list of users
+                workout.Users.Add(db.Users.Where(w => w.Id == workout.CreatorId).First());
+                
                 db.Workouts.Add(workout);
                 db.SaveChanges();
                 TempData["message"] = "Antrenamentul a fost adaugat";
@@ -228,6 +253,16 @@ namespace RepReady.Controllers
             }
             return selectList;
         }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult TakeOver(int id)
+        {
+            Workout workout = db.Workouts.Where(w => w.Id == id).First();
+            workout.CreatorId = _userManager.GetUserId(User);
+            db.SaveChanges();
+            return Redirect("/Workouts/Show/" + id);
+        }
+
 
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RepReady.Data;
 
@@ -11,9 +12,11 @@ using RepReady.Data;
 namespace RepReady.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20241215180712_DateValidation")]
+    partial class DateValidation
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -260,24 +263,6 @@ namespace RepReady.Data.Migrations
                     b.ToTable("AspNetUsers", (string)null);
                 });
 
-            modelBuilder.Entity("RepReady.Models.ApplicationUserExercise", b =>
-                {
-                    b.Property<string>("UserId")
-                        .HasColumnType("nvarchar(450)");
-
-                    b.Property<int>("ExerciseId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("Status")
-                        .HasColumnType("bit");
-
-                    b.HasKey("UserId", "ExerciseId");
-
-                    b.HasIndex("ExerciseId");
-
-                    b.ToTable("UserExercises");
-                });
-
             modelBuilder.Entity("RepReady.Models.Category", b =>
                 {
                     b.Property<int>("Id")
@@ -358,6 +343,10 @@ namespace RepReady.Data.Migrations
 
                     b.Property<DateTime>("Start")
                         .HasColumnType("datetime2");
+
+                    b.Property<bool?>("Status")
+                        .IsRequired()
+                        .HasColumnType("bit");
 
                     b.Property<string>("Title")
                         .IsRequired()
@@ -527,25 +516,6 @@ namespace RepReady.Data.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("RepReady.Models.ApplicationUserExercise", b =>
-                {
-                    b.HasOne("RepReady.Models.Exercise", "Exercise")
-                        .WithMany("UserExercises")
-                        .HasForeignKey("ExerciseId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("RepReady.Models.ApplicationUser", "User")
-                        .WithMany("UserExercises")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("Exercise");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("RepReady.Models.Comment", b =>
                 {
                     b.HasOne("RepReady.Models.Exercise", "Exercise")
@@ -605,8 +575,6 @@ namespace RepReady.Data.Migrations
             modelBuilder.Entity("RepReady.Models.ApplicationUser", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("UserExercises");
                 });
 
             modelBuilder.Entity("RepReady.Models.Category", b =>
@@ -617,8 +585,6 @@ namespace RepReady.Data.Migrations
             modelBuilder.Entity("RepReady.Models.Exercise", b =>
                 {
                     b.Navigation("Comments");
-
-                    b.Navigation("UserExercises");
                 });
 
             modelBuilder.Entity("RepReady.Models.Workout", b =>
