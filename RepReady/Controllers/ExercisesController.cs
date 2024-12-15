@@ -43,9 +43,31 @@ namespace RepReady.Controllers
                                 .FirstOrDefault(e => e.Id == id);
 
 
+            // For displaying the edit and delete buttons
+            ViewBag.EsteAdmin = User.IsInRole("Admin");
 
-            ViewBag.EsteAdmin = User.IsInRole("Admin"); // For displaying the edit and delete buttons
-            ViewBag.CurrentUser = _userManager.GetUserId(User); // For displaying the edit and delete buttons
+            // For displaying the edit and delete buttons
+            ViewBag.CurrentUser = _userManager.GetUserId(User);
+
+            // For displaying the status of the exercise (complete/incomplete)
+            ApplicationUserExercise? exercisesForUser = db.UserExercises
+                    .Where(ue => ue.ExerciseId == id && ue.UserId == _userManager.GetUserId(User))
+                    .FirstOrDefault();
+
+
+            if (exercisesForUser == null)
+            {
+                ViewBag.Status = null;
+            }
+            else
+            {
+                ViewBag.Status = exercisesForUser.Status;
+            }
+
+
+            // For displaying the creator of the exercise
+            ViewBag.CreatorName = db.Users.Find(exercise.CreatorId).UserName;
+
 
             return View(exercise);
         }
@@ -176,14 +198,28 @@ namespace RepReady.Controllers
                 exercise.CreatorId = _userManager.GetUserId(User);
 
                 exercise.Users = new List<ApplicationUser>(); // Initialize the list of users for the exercise
-                for (int i = 0; i < UsersIdList.Count; i++)
+
+
+                // Add the exercise to the database and save it to generate the ID
+                db.Exercises.Add(exercise);
+                await db.SaveChangesAsync(); // Now `exercise.Id` is available
+
+                // Add users to the exercise
+                foreach (var userId in UsersIdList)
                 {
-                    // Add the users to the exercise from the list of user ids
-                    ApplicationUser user = db.Users.Find(UsersIdList[i]);
-                    exercise.Users.Add(user);
+                    ApplicationUser user = db.Users.Find(userId);
+                    exercise.Users.Add(user); // Associate users directly to the exercise
+
+                    // Add the user-exercise relation to the database
+                    var userExercise = new ApplicationUserExercise
+                    {
+                        UserId = user.Id,
+                        ExerciseId = exercise.Id, // Now `exercise.Id` is available
+                        Status = false
+                    };
+                    db.UserExercises.Add(userExercise);
                 }
 
-                db.Exercises.Add(exercise);
                 await db.SaveChangesAsync();
                 TempData["message"] = "Exercițiul a fost adaugat";
                 return Redirect("/Workouts/Show/" + exercise.WorkoutId);
@@ -274,7 +310,6 @@ namespace RepReady.Controllers
                 exercise.Description = requestExercise.Description;
                 exercise.Reps = requestExercise.Reps;
                 exercise.Sets = requestExercise.Sets;
-                exercise.Status = requestExercise.Status;
                 exercise.Start = requestExercise.Start;
                 exercise.Finish = requestExercise.Finish;
 
@@ -349,12 +384,12 @@ namespace RepReady.Controllers
         }
 
         [Authorize(Roles = "User,Organizer,Admin")]
-        public ActionResult ChangeStatus(int id) {
+        public ActionResult ChangeStatus(int ExerciseId, string UserId) {
             // Change status of the exercise (complete/incomplete)
-            Exercise exercise = db.Exercises.Where(e => e.Id == id).First();
-            exercise.Status = !exercise.Status;
+            ApplicationUserExercise userExercise = db.UserExercises.Where(ue => ue.ExerciseId == ExerciseId && ue.UserId == UserId).First();
+            userExercise.Status = !userExercise.Status;
             db.SaveChanges();
-            return Redirect("/Exercises/Show/" + exercise.Id);
+            return Redirect("/Exercises/Show/" + ExerciseId);
         }
 
     }

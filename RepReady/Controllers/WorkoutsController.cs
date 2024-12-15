@@ -71,6 +71,10 @@ namespace RepReady.Controllers
                 ViewBag.Message = TempData["message"];
                 ViewBag.Alert = TempData["messageType"];
             }
+
+            ViewBag.InvitationsCount = db.WorkoutInvitations
+                                        .Where(wi => wi.UserId == userId && wi.Accepted == false)
+                                        .Count();
             return View();
         }
 
@@ -249,6 +253,16 @@ namespace RepReady.Controllers
             }
             return selectList;
         }
+
+        [Authorize(Roles = "Admin")]
+        public IActionResult TakeOver(int id)
+        {
+            Workout workout = db.Workouts.Where(w => w.Id == id).First();
+            workout.CreatorId = _userManager.GetUserId(User);
+            db.SaveChanges();
+            return Redirect("/Workouts/Show/" + id);
+        }
+
 
     }
 }
