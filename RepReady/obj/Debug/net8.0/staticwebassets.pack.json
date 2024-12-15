@@ -13,6 +13,10 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\wwwroot\\images\\cables_on_bench.png",
+      "PackagePath": "staticwebassets\\images\\cables_on_bench.png"
+    },
+    {
       "Id": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

@@ -55,7 +55,7 @@ namespace RepReady.Controllers
                     .FirstOrDefault()?.Workouts
                     .ToList() ?? new List<Workout>(); // In case the user has no workouts we return an empty list
 
-                // List of all workouts
+                // Set of all workouts order by date
                 var workouts = new HashSet<Workout>(workoutsCreated)
                                 .Union(new HashSet<Workout>(workoutsParticipating))
                                 .OrderBy(w => w.Date)
@@ -86,6 +86,7 @@ namespace RepReady.Controllers
             // Get the creator of the workout
             ApplicationUser user = db.Users.Where(u => u.Id == workout.CreatorId).First();
 
+            // Order the workout's exercises by start time
             workout.Exercises = workout.Exercises.OrderBy(exercise => exercise.Start).ToList();
 
             // Pass the creator's name to the view for display (in partial)
@@ -122,7 +123,9 @@ namespace RepReady.Controllers
             if (ModelState.IsValid)
             {
                 workout.Users = new List<ApplicationUser>();
+                // Add the creator to the list of users
                 workout.Users.Add(db.Users.Where(w => w.Id == workout.CreatorId).First());
+                
                 db.Workouts.Add(workout);
                 db.SaveChanges();
                 TempData["message"] = "Antrenamentul a fost adaugat";

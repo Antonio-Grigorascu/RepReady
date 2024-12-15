@@ -6,7 +6,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.VisualStudio.Web.CodeGenerators.Mvc.Templates.BlazorIdentity.Pages;
 using RepReady.Data;
 using RepReady.Models;
+using System.Net.NetworkInformation;
 using static System.Runtime.InteropServices.JavaScript.JSType;
+using System.Threading.Tasks;
 
 namespace RepReady.Controllers
 {
@@ -15,15 +17,18 @@ namespace RepReady.Controllers
         private readonly ApplicationDbContext db;
         private readonly UserManager<ApplicationUser> _userManager;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IWebHostEnvironment _env;
         public ExercisesController(
             ApplicationDbContext context,
             UserManager<ApplicationUser> userManager,
-            RoleManager<IdentityRole> roleManager
+            RoleManager<IdentityRole> roleManager,
+            IWebHostEnvironment env
         )
         {
             db = context;
             _userManager = userManager;
             _roleManager = roleManager;
+            _env = env;
         }
 
 
@@ -127,11 +132,40 @@ namespace RepReady.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User,Organizer,Admin")]
-        public IActionResult New(Exercise exercise, List<string> UsersIdList) 
+        public async Task<IActionResult> New(Exercise exercise, List<string> UsersIdList)
         {
+
             // UsersIdList is a list of user ids that would be added to the exercise - sent from the form (checkboxes)
 
-            if (ModelState.IsValid)
+            // Adding the image
+            IFormFile Image = exercise.File;
+            if (Image != null && Image.Length > 0)
+            {
+                // Check the extension
+                var allowedExtensions = new[] { ".jpg", ".jpeg", ".png", ".gif", ".mp4", ".mov" };
+                var fileExtension = Path.GetExtension(Image.FileName).ToLower();
+                if (!allowedExtensions.Contains(fileExtension))
+                {
+                    ModelState.AddModelError("ExerciseImage", "Fișierul trebuie să fie o imagine(jpg, jpeg, png, gif) sau un video(mp4, mov).");
+                    return View(exercise);
+                }
+
+                // Storage path
+                var storagePath = Path.Combine(_env.WebRootPath, "images", Image.FileName);
+                var databaseFileName = "/images/" + Image.FileName;
+
+                // File saving
+                using (var fileStream = new FileStream(storagePath, FileMode.Create))
+                {
+                    await Image.CopyToAsync(fileStream);
+                }
+                ModelState.Remove(nameof(exercise.Image));
+                exercise.Image = databaseFileName;
+
+            }
+
+
+            if (TryValidateModel(exercise))
             {
                 exercise.CreatorId = _userManager.GetUserId(User);
 
@@ -144,7 +178,7 @@ namespace RepReady.Controllers
                 }
 
                 db.Exercises.Add(exercise);
-                db.SaveChanges();
+                await db.SaveChangesAsync();
                 TempData["message"] = "Exercițiul a fost adaugat";
                 return Redirect("/Workouts/Show/" + exercise.WorkoutId);
             }
@@ -162,6 +196,7 @@ namespace RepReady.Controllers
                 return View(exercise);
             }
         }
+   
 
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id)
@@ -234,10 +269,10 @@ namespace RepReady.Controllers
                 {
                     // Add the users to the exercise
                     ApplicationUser user = db.Users.Find(addUsers[i]);
-                    exercise.Users.Add(user); 
+                    exercise.Users.Add(user);
                 }
 
-                for(int i = 0; i < removeUsers.Count; i++)
+                for (int i = 0; i < removeUsers.Count; i++)
                 {
                     // Remove the users from the exercise
                     ApplicationUser user = db.Users.Find(removeUsers[i]);
@@ -290,7 +325,8 @@ namespace RepReady.Controllers
         }
 
         [Authorize(Roles = "User,Organizer,Admin")]
-        public ActionResult Complete(int id) {
+        public ActionResult ChangeStatus(int id) {
+            // Change status of the exercise (complete/incomplete)
             Exercise exercise = db.Exercises.Where(e => e.Id == id).First();
             exercise.Status = !exercise.Status;
             db.SaveChanges();

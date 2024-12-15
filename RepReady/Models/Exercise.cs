@@ -34,7 +34,8 @@ namespace RepReady.Models
         [Required(ErrorMessage = "Data de început este obligatorie")]
         public DateTime Finish { get; set; }  // planificate de la inceput
 
-        //public file media -- TO DO
+        // path to media file
+        public string? Image { get; set; }
 
         public string? CreatorId { get; set; }
         public int? WorkoutId { get; set; }
@@ -45,7 +46,8 @@ namespace RepReady.Models
 
         public virtual ICollection<ApplicationUser>? Users { get; set; }
 
-
+        [NotMapped]
+        public IFormFile? File { get; set; }
 
     }
 }

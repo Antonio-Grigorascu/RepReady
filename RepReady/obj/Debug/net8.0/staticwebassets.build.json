@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "p/zBmbYcBWMTY5i5D3agv88kLjsyC6G0z6xIWCxhvZs=",
+  "Hash": "kuMTt6zCXgfwgbxTl60zdXLTHHr2SsfLFoMRFgFJiLc=",
   "Source": "RepReady",
   "BasePath": "_content/RepReady",
   "Mode": "Default",
@@ -1231,6 +1231,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\favicon.ico"
+    },
+    {
+      "Identity": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\wwwroot\\images\\cables_on_bench.png",
+      "SourceId": "RepReady",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\wwwroot\\",
+      "BasePath": "_content/RepReady",
+      "RelativePath": "images/cables_on_bench.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\cables_on_bench.png"
     },
     {
       "Identity": "C:\\Users\\Public\\Dezvoltarea Aplicatiilor Web\\RepReady\\RepReady\\wwwroot\\js\\site.js",

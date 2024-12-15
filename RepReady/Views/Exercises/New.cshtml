@@ -3,7 +3,7 @@
 
 <br />
 
-<form method="post" asp-action="New" asp-controller="Exercises">
+<form enctype="multipart/form-data" method="post" asp-action="New" asp-controller="Exercises">
     <!-- Title -->
     <div class="form-group">
         <label asp-for="Title">Titlu exercițiu</label>
@@ -65,6 +65,14 @@
         <span asp-validation-for="Finish" class="text-danger"></span>
     </div>
     <br />
+
+    <!-- Image selector  -->
+    <div class="form-group">
+        <div>
+            <label asp-for="File">Adauga imagine</label><br />
+            <input asp-for="File" class="form-control" type="file" />
+        </div>
+    </div>
 
     <!-- Multiple choice users -->
     <div class="form-group">
