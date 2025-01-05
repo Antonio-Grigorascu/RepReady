@@ -250,7 +250,46 @@ namespace RepReady.Controllers
                 return RedirectToAction("New");
             }
         }
-   
+
+        [HttpGet]
+        [Authorize(Roles = "User,Organizer,Admin")]
+        public IActionResult NewTemplate(int templateId, int workoutId)
+        {
+            // The workout we add the exercise to
+            Workout workout = db.Workouts.Include("Users").Where(workout => workout.Id == workoutId)
+                                         .First();
+
+            // The users that are part of the workout
+            var users = db.Workouts.Include("Users").Where(w => w.Id == workoutId).First().Users;
+
+            if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin") || User.IsInRole("Organizer"))
+            {
+                ViewBag.Workout = workout;  // For adding the workout id to the exercise (hidden)
+                ViewBag.Users = users;      // For adding the users to the exercise (select checkboxes)
+
+                Exercise exercise = new Exercise();
+
+                var template = db.ExerciseTemplates.Find(templateId);
+
+                exercise.Title = template.Title;
+                exercise.Description = template.Description;
+                exercise.Reps = template.Reps;
+                exercise.Sets = template.Sets;
+                exercise.Image = template.Image;
+                exercise.WorkoutId = workoutId;
+
+
+                ViewBag.ErrorMessage = TempData["errorMessage"];
+                return View(exercise);
+            }
+            else
+            {
+                TempData["message"] = "Nu aveti dreptul sa adăugați un exercițiu într-un antrenament care nu va apartine";
+                TempData["messageType"] = "alert-danger";
+                return Redirect("/Workouts/Show/" + workout.Id);
+            }
+        }
+
 
         [Authorize(Roles = "User,Organizer,Admin")]
         public IActionResult Edit(int id)

@@ -37,6 +37,8 @@
         @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
         TempData["workoutId"] = @Model.Id;
         <a class="btn btn-success" asp-controller="Exercises" asp-action="New">Adauga exercițiu</a>
+        TempData["workoutId"] = @Model.Id;
+        <a class="btn btn-success" asp-controller="ExerciseTemplates" asp-action="Index" asp-route-workoutId="@Model.Id" >Foloseste model</a>
     }
 </div>
 <br />
@@ -81,7 +83,7 @@
 }
 
 
-@* Afisarea paginata a articolelor *@
+@* Afisarea paginata a exercitiilor *@
 
 <div>
     <nav aria-label="Page navigation example">

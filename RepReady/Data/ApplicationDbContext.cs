@@ -22,6 +22,9 @@ namespace RepReady.Data
 
         public DbSet<ApplicationUserExercise> UserExercises { get; set; }
 
+        public DbSet<ExerciseTemplate> ExerciseTemplates { get; set; }
+
+
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             // Configure the many-to-many relationship using the join entity

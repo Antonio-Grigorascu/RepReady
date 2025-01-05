@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "A2ZHRlQT72NM/j6PWoc+yKXC57cYbVVqf9iaguyICu8=",
+  "Hash": "aGHHsn8KXsMyFOwQ+mYkiiZmZLO9ChNbw0gaIHfUpNM=",
   "Source": "RepReady",
   "BasePath": "_content/RepReady",
   "Mode": "Default",
@@ -1290,6 +1290,25 @@
       "OriginalItemSpec": "wwwroot\\images\\cables_on_bench.png"
     },
     {
+      "Identity": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\pushup.jpg",
+      "SourceId": "RepReady",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\",
+      "BasePath": "_content/RepReady",
+      "RelativePath": "images/pushup.jpg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\pushup.jpg"
+    },
+    {
       "Identity": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\th.jpeg",
       "SourceId": "RepReady",
       "SourceType": "Discovered",
@@ -1307,6 +1326,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\th.jpeg"
+    },
+    {
+      "Identity": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\Workout men chin up low poly.png",
+      "SourceId": "RepReady",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\",
+      "BasePath": "_content/RepReady",
+      "RelativePath": "images/Workout men chin up low poly.png",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\Workout men chin up low poly.png"
     },
     {
       "Identity": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\js\\site.js",
