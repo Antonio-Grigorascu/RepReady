@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\RepReady.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\css\\login.css",
+      "PackagePath": "staticwebassets\\css\\login.css"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\css\\site.css",
       "PackagePath": "staticwebassets\\css\\site.css"
     },
@@ -13,12 +17,24 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\Workout men chin up low poly.png",
+      "PackagePath": "staticwebassets\\images\\Workout men chin up low poly.png"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\bench.jpeg",
       "PackagePath": "staticwebassets\\images\\bench.jpeg"
     },
     {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\cables_on_bench.png",
       "PackagePath": "staticwebassets\\images\\cables_on_bench.png"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\pushup.jpg",
+      "PackagePath": "staticwebassets\\images\\pushup.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\th.jpeg",
+      "PackagePath": "staticwebassets\\images\\th.jpeg"
     },
     {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\js\\site.js",

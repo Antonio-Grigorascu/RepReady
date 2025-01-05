@@ -14,13 +14,14 @@
             <span class="alert-success">Seturi: @Model.Sets</span>
             @if(ViewBag.Status != null)
             {
-                <span class="alert-success">Status: @(ViewBag.Status == true ? "Complete" : "Incomplet")</span>
+                <span class="alert-success">Status: @(ViewBag.Status == 1 ? "Complet" : (ViewBag.Status == -1 ? "Incomplet" : "În progres"))</span>
             }
             <span class="alert-success">Start: @Model.Start.ToString("g")</span>
             <span class="alert-success">Finish: @Model.Finish.ToString("g")</span>
 
         </div>
 
+        
         <div>
             @if (Model.Image != null)
             {
@@ -37,37 +38,58 @@
                 }
             }
         </div>
+        
 
     </div>
 
     <hr />
 
     <div class="d-flex flex-row justify-content-between">
-        <a class="btn btn-success" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează exercițiul</a>
-
         <form method="post" asp-controller="Exercises" asp-action="ChangeStatus" asp-route-ExerciseId="@Model.Id" asp-route-UserId="@ViewBag.CurrentUser">
-           @if(ViewBag.Status != null)
+            @if (ViewBag.Status != null)
             {
-                @if (ViewBag.Status == false)
-                {
-                    <button class="btn btn-success" type="submit">Am terminat</button>
-                }
-                else
-                {
-                    <button class="btn btn-danger" type="submit">Again</button>
-                }
+                <div class="d-flex flex-row justify-content-between">
+                    @if (ViewBag.Status == -1)
+                    {
+                        <button class="btn btn-success" type="submit">Începe exercițiul</button>
+                    }
+                    else if (ViewBag.Status == 0)
+                    {
+                        <button class="btn btn-warning" type="submit">Finalizează exercițiul</button>
+                    }
+                    else
+                    {
+                    
+                        <button class="btn btn-danger" type="submit">Reia exercițiul</button>
+                    }
+                </div>
             }
         </form>
 
-        <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id">
-            <button class="btn btn-danger" type="submit">Sterge exercitiu</button>
-        </form>
     </div>
+
+    <hr />
+
+    @if(ViewBag.EsteAdmin == true || ViewBag.EsteCreator == true)
+    {
+        <div class="d-flex flex-row justify-content-between">
+
+            <a class="btn btn-success" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează exercițiul</a>
+
+            <a class="btn btn-success" asp-controller="Exercises" asp-action="AddUsers" asp-route-id="@Model.Id">Editează utilizatori</a>
+        
+        
+            <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id">
+                <button class="btn btn-danger" type="submit">Sterge exercitiu</button>
+            </form>
+        </div>
+    }
 </div>
 
 <br />
 <br />
 
+<h2>Participanți:</h2>
 @foreach (var user in Model.Users)
 {
     <p>@user.UserName</p>
@@ -131,9 +153,10 @@
                     <div class="card-body">
                         <input type="hidden" name="ExerciseId" value="@Model.Id" />
 
-                        <label>Continut comentariu</label>
+                        <label>Continut comentariu</label> 
                         <br />
                         <textarea class="form-control" name="Content"></textarea>
+                        
                         
                         <br />
                         <button class="btn btn-success" type="submit">Adauga comentariul</button>

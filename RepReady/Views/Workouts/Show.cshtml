@@ -16,7 +16,7 @@
             <a class="btn btn-success" asp-controller="Workouts" asp-action="Edit" asp-route-id="@Model.Id">Editeaza antrenament</a>
 
 
-            @if (ViewBag.EsteAdmin == true)
+            @if (ViewBag.EsteAdmin == true && ViewBag.EsteCreator == false)
             {
                 <a class="btn btn-success" asp-controller="Workouts" asp-action="TakeOver" asp-route-id="@Model.Id">Preia antrenamentul</a>
             }
@@ -37,11 +37,14 @@
         @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
         TempData["workoutId"] = @Model.Id;
         <a class="btn btn-success" asp-controller="Exercises" asp-action="New">Adauga exercițiu</a>
+        TempData["workoutId"] = @Model.Id;
+        <a class="btn btn-success" asp-controller="ExerciseTemplates" asp-action="Index" asp-route-workoutId="@Model.Id" >Foloseste model</a>
     }
 </div>
 <br />
 <br />
 
+<h2>Participanți:</h2>
 @foreach(var user in Model.Users)
 {
     <p>@user.UserName</p>
@@ -49,7 +52,7 @@
 
 
  @*Afisare exercitii impreuna cu butoanele de editare si stergere*@ 
-@foreach (var exercise in Model.Exercises)
+@foreach (var exercise in ViewBag.Exercises)
 {
     <div class="card">
 
@@ -80,3 +83,27 @@
 }
 
 
+@* Afisarea paginata a exercitiilor *@
+
+<div>
+    <nav aria-label="Page navigation example">
+        <ul class="pagination">
+            <li class="page-item">
+                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
+                    <span aria-hidden="true">&laquo;</span>
+                </a>
+            </li>
+
+            @for (int i = 1; i <= ViewBag.lastPage; i++)
+            {
+                <li class="page-item"> <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@(i)</a> </li>
+            }
+
+            <li class="page-item">
+                <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
+                    <span aria-hidden="true">&raquo;</span>
+                </a>
+            </li>
+        </ul>
+    </nav>
+</div>

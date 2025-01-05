@@ -1,0 +1,26 @@
+﻿
+<h2>Lista modele</h2>
+<br />
+
+
+@foreach (var template in ViewBag.ExerciseTemplates)
+{
+    <div class="card-body">
+        <div class="form-group">
+            <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i>@template.Title</div>
+            <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i>@template.Description</div>
+            <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i>@template.Reps</div>
+        </div>
+        <a class="btn btn-success" asp-controller="Exercises" asp-action="NewTemplate" asp-route-templateId="@template.Id" asp-route-workoutId="@ViewBag.WorkoutId">Folosește model</a>
+
+    </div>
+    <br />
+
+    
+
+    <br />
+    <br />
+}
+
+<br />
+

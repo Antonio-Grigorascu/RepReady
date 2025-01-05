@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Identity.Client;
 using RepReady.Data;
 
 namespace RepReady.Models
@@ -82,6 +83,9 @@ namespace RepReady.Models
 
                 context.SaveChanges();
             }
+
+        
         }
+
     }
 }

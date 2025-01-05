@@ -30,12 +30,16 @@ namespace RepReady.Controllers
 
             var userId = _userManager.GetUserId(User);
 
+            // List of workouts
+            List<Workout> workoutsPage;
+
             if (User.IsInRole("Admin"))
             {
                 var workouts = db.Workouts.Include("Category").OrderBy(w => w.Date);
 
                 // Pass the workouts to the view for display
                 ViewBag.Workouts = workouts;
+                workoutsPage = workouts.ToList();
             }
             else
             {
@@ -64,7 +68,14 @@ namespace RepReady.Controllers
 
                 // Pass the workouts to the view for display
                 ViewBag.Workouts = workouts;
+                workoutsPage = workouts.ToList();
             }
+
+            // Workouts per page
+            int _perPage = 3;
+
+            
+
 
             if (TempData.ContainsKey("message"))
             {
@@ -75,6 +86,27 @@ namespace RepReady.Controllers
             ViewBag.InvitationsCount = db.WorkoutInvitations
                                         .Where(wi => wi.UserId == userId && wi.Accepted == false)
                                         .Count();
+
+            // Total number of workouts
+            int totalWorkouts = workoutsPage.Count;
+
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+
+            var offset = 0;
+
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+
+            var paginatedWorkouts = workoutsPage.Skip(offset).Take(_perPage);
+
+            ViewBag.lastPage = Math.Ceiling((float)totalWorkouts / (float)_perPage);
+
+            ViewBag.Workouts = paginatedWorkouts;
+
+            ViewBag.PaginationBaseUrl = "/Workouts/Index?page";
+
             return View();
         }
 
@@ -98,11 +130,44 @@ namespace RepReady.Controllers
 
             SetAccessRights(); // For button visibility
 
+            // Check if the current user is the creator of the workout, for button visibility
+            ViewBag.EsteCreator = true;
+            if (user.Id != _userManager.GetUserId(User))
+            {
+                ViewBag.EsteCreator = false;
+            }
+
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
                 ViewBag.Alert = TempData["messageType"];
             }
+
+            var exercisesPage = workout.Exercises;
+
+            // Exercises per page
+            int _perPage = 3;
+
+            // Total number of exercises
+            int totalExercises = exercisesPage.Count;
+
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+
+            var offset = 0;
+
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+
+            var paginatedExercises = exercisesPage.Skip(offset).Take(_perPage);
+
+            ViewBag.lastPage = Math.Ceiling((float)totalExercises / (float)_perPage);
+
+            ViewBag.Exercises = paginatedExercises;
+
+            ViewBag.PaginationBaseUrl = "/Workouts/Show/" + workout.Id + "/?page";
+
             return View(workout);
         }
 
@@ -202,14 +267,29 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Admin")]
         public ActionResult Delete(int id)
         {
-            Workout workout = db.Workouts.Include("Exercises") // Include exercises for delete in cascade
-                                         .Include("Exercises.Comments")  // Include comments for delete in cascade
-                                         .Where(workout => workout.Id == id)
-                                         .First();
+            //Workout workout = db.Workouts.Include("Exercises") // Include exercises for delete in cascade
+            //                             .Include("Exercises.Comments")  // Include comments for delete in cascade
+            //                             .Where(workout => workout.Id == id)
+            //                             .First();
+
+            Workout? workout = db.Workouts.FirstOrDefault(w => w.Id == id);
+
+            
+
+            if (workout == null)
+            {
+                return Content("Exercitiul nu exista in baza de date!");
+            }
 
             if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
+                var exercises = db.Exercises.Where(e => e.WorkoutId == id);
+                foreach (var exercise in exercises)
+                {
+                    db.Exercises.Remove(exercise);
+                }
                 db.Workouts.Remove(workout);
+                
                 db.SaveChanges();
                 TempData["message"] = "Antrenamentul a fost sters";
                 TempData["messageType"] = "alert-success";
@@ -257,8 +337,13 @@ namespace RepReady.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult TakeOver(int id)
         {
-            Workout workout = db.Workouts.Where(w => w.Id == id).First();
+            Workout workout = db.Workouts.Include("Users").Where(w => w.Id == id).First();
             workout.CreatorId = _userManager.GetUserId(User);
+            var currentUser = db.Users.Where(u => u.Id == workout.CreatorId).First();
+            if (!workout.Users.Contains(currentUser))
+            {
+                workout.Users.Add(currentUser);
+            }
             db.SaveChanges();
             return Redirect("/Workouts/Show/" + id);
         }

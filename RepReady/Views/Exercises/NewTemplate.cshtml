@@ -1,0 +1,91 @@
+﻿@model RepReady.Models.Exercise
+
+<h2>Editare exercițiu</h2>
+
+@if (ViewBag.ErrorMessage != null)
+{
+    <div class="text-danger">@ViewBag.ErrorMessage</div>
+}
+
+
+<form method="post" asp-action="New" asp-controller="Exercises">
+    <!-- Title -->
+    <div>
+        <label asp-for="Title" class="form-label">Titlu exercițiu</label><br />
+        <input asp-for="Title" value="@Model.Title" class="form-control" />
+        <span asp-validation-for="Title" class="text-danger"></span>
+    </div>
+    <br />
+
+    <!-- Description -->
+    <div>
+        <label asp-for="Description" class="form-label">Descriere exercițiu</label><br />
+        <textarea asp-for="Description" class="form-control">@Model.Description</textarea>
+        <span asp-validation-for="Description" class="text-danger"></span>
+    </div>
+    <br />
+
+    <!-- Reps -->
+    <div>
+        <label asp-for="Reps" class="form-label">Număr de repetări</label><br />
+        <input asp-for="Reps" value="@Model.Reps" class="form-control" />
+        <span asp-validation-for="Reps" class="text-danger"></span>
+    </div>
+    <br />
+
+    <!-- Sets -->
+    <div>
+        <label asp-for="Sets" class="form-label">Număr de seturi</label><br />
+        <input asp-for="Sets" value="@Model.Sets" class="form-control" />
+        <span asp-validation-for="Sets" class="text-danger"></span>
+    </div>
+    <br />
+
+    <!-- Start Date -->
+    <div class="form-group">
+        <label asp-for="Start">Data și ora de început</label><br />
+        <input asp-for="Start" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="Start" class="text-danger"></span>
+    </div>
+    <br />
+
+    <!-- Finish Date -->
+    <div class="form-group">
+        <label asp-for="Finish">Data și ora de final</label><br />
+        <input asp-for="Finish" type="datetime-local" class="form-control" value="@DateTime.Now.ToString("yyyy-MM-ddTHH:mm")" />
+        <span asp-validation-for="Finish" class="text-danger"></span>
+    </div>
+    <br />
+
+
+
+    <!-- Multiple choice users -->
+    <div class="form-group">
+        <label>Utilizatori</label><br />
+
+        @foreach (var user in ViewBag.Users)
+        {
+            <div class="form-check">
+                <input class="form-check-input" type="checkbox" name="UsersIdList" value="@user.Id" id="user_@user.Id" />
+                <label class="form-check-label" for="user_@user.Id">
+                    @user.UserName
+                </label>
+            </div>
+        }
+
+        <!-- <span asp-validation-for="Users" class="text-danger"></span> -->
+    </div>
+
+    <div class="form-group">
+        <input type="hidden" asp-for="Image" value="@Model.Image" class="form-control" />
+    </div> 
+
+    <!-- Workout Selection -->
+    <div class="form-group">
+        <input type="hidden" name="WorkoutId" value="@Model.WorkoutId" />
+    </div>
+    <br />
+
+    <!-- Submit Button -->
+    <button type="submit" class="btn btn-success">Salveaza exercițiul</button>
+</form>
