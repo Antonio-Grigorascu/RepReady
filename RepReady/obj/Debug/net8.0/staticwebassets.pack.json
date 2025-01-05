@@ -21,6 +21,10 @@
       "PackagePath": "staticwebassets\\images\\cables_on_bench.png"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\th.jpeg",
+      "PackagePath": "staticwebassets\\images\\th.jpeg"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\js\\site.js",
       "PackagePath": "staticwebassets\\js\\site.js"
     },

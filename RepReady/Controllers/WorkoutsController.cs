@@ -98,6 +98,13 @@ namespace RepReady.Controllers
 
             SetAccessRights(); // For button visibility
 
+            // Check if the current user is the creator of the workout, for button visibility
+            ViewBag.EsteCreator = true;
+            if (user.Id != _userManager.GetUserId(User))
+            {
+                ViewBag.EsteCreator = false;
+            }
+
             if (TempData.ContainsKey("message"))
             {
                 ViewBag.Message = TempData["message"];
@@ -202,14 +209,29 @@ namespace RepReady.Controllers
         [Authorize(Roles = "User,Admin")]
         public ActionResult Delete(int id)
         {
-            Workout workout = db.Workouts.Include("Exercises") // Include exercises for delete in cascade
-                                         .Include("Exercises.Comments")  // Include comments for delete in cascade
-                                         .Where(workout => workout.Id == id)
-                                         .First();
+            //Workout workout = db.Workouts.Include("Exercises") // Include exercises for delete in cascade
+            //                             .Include("Exercises.Comments")  // Include comments for delete in cascade
+            //                             .Where(workout => workout.Id == id)
+            //                             .First();
+
+            Workout? workout = db.Workouts.FirstOrDefault(w => w.Id == id);
+
+            
+
+            if (workout == null)
+            {
+                return Content("Exercitiul nu exista in baza de date!");
+            }
 
             if (workout.CreatorId == _userManager.GetUserId(User) || User.IsInRole("Admin"))
             {
+                var exercises = db.Exercises.Where(e => e.WorkoutId == id);
+                foreach (var exercise in exercises)
+                {
+                    db.Exercises.Remove(exercise);
+                }
                 db.Workouts.Remove(workout);
+                
                 db.SaveChanges();
                 TempData["message"] = "Antrenamentul a fost sters";
                 TempData["messageType"] = "alert-success";
@@ -257,8 +279,13 @@ namespace RepReady.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult TakeOver(int id)
         {
-            Workout workout = db.Workouts.Where(w => w.Id == id).First();
+            Workout workout = db.Workouts.Include("Users").Where(w => w.Id == id).First();
             workout.CreatorId = _userManager.GetUserId(User);
+            var currentUser = db.Users.Where(u => u.Id == workout.CreatorId).First();
+            if (!workout.Users.Contains(currentUser))
+            {
+                workout.Users.Add(currentUser);
+            }
             db.SaveChanges();
             return Redirect("/Workouts/Show/" + id);
         }

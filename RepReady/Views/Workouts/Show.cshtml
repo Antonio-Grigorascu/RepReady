@@ -16,7 +16,7 @@
             <a class="btn btn-success" asp-controller="Workouts" asp-action="Edit" asp-route-id="@Model.Id">Editeaza antrenament</a>
 
 
-            @if (ViewBag.EsteAdmin == true)
+            @if (ViewBag.EsteAdmin == true && ViewBag.EsteCreator == false)
             {
                 <a class="btn btn-success" asp-controller="Workouts" asp-action="TakeOver" asp-route-id="@Model.Id">Preia antrenamentul</a>
             }
@@ -42,6 +42,7 @@
 <br />
 <br />
 
+<h2>Participanți:</h2>
 @foreach(var user in Model.Users)
 {
     <p>@user.UserName</p>

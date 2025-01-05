@@ -6,7 +6,7 @@
         public virtual ApplicationUser User { get; set; }
         public int ExerciseId { get; set; }
         public virtual Exercise Exercise { get; set; }
-        public bool Status { get; set; }
+        public int Status { get; set; }
 
     }
 }

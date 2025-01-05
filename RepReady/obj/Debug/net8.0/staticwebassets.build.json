@@ -1,6 +1,6 @@
 {
   "Version": 1,
-  "Hash": "GZ76AOBUgJYGWE9ypl98auWqEaUyvLQGG+NoPu/1ilY=",
+  "Hash": "rPRBoZBiNjbDbGhfXG4MjwiepT0FhoF/3hRhEw4vw6Q=",
   "Source": "RepReady",
   "BasePath": "_content/RepReady",
   "Mode": "Default",
@@ -1269,6 +1269,25 @@
       "CopyToOutputDirectory": "Never",
       "CopyToPublishDirectory": "PreserveNewest",
       "OriginalItemSpec": "wwwroot\\images\\cables_on_bench.png"
+    },
+    {
+      "Identity": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\th.jpeg",
+      "SourceId": "RepReady",
+      "SourceType": "Discovered",
+      "ContentRoot": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\",
+      "BasePath": "_content/RepReady",
+      "RelativePath": "images/th.jpeg",
+      "AssetKind": "All",
+      "AssetMode": "All",
+      "AssetRole": "Primary",
+      "AssetMergeBehavior": "PreferTarget",
+      "AssetMergeSource": "",
+      "RelatedAsset": "",
+      "AssetTraitName": "",
+      "AssetTraitValue": "",
+      "CopyToOutputDirectory": "Never",
+      "CopyToPublishDirectory": "PreserveNewest",
+      "OriginalItemSpec": "wwwroot\\images\\th.jpeg"
     },
     {
       "Identity": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\js\\site.js",
