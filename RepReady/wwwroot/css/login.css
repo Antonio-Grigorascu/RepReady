@@ -1,0 +1,70 @@
+﻿
+.navbar-nav {
+    background-color: #212529; /* Dark gray background for sporty vibe */
+    padding: 10px;
+    border-radius: 5px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.3);
+}
+
+    .navbar-nav .nav-item {
+        margin: 5px;
+    }
+
+    .navbar-nav .nav-link {
+        color: #FFFFFF; /* White text for contrast */
+        font-weight: bold;
+        font-size: 16px;
+        text-transform: uppercase;
+        transition: color 0.3s ease, transform 0.2s ease;
+    }
+
+        .navbar-nav .nav-link:hover {
+            color: #32CD32; /* Neon green for hover effect */
+            transform: scale(1.1); /* Slightly enlarge for interaction feedback */
+            text-shadow: 0px 0px 5px rgba(50, 205, 50, 0.8); /* Neon glow effect */
+        }
+
+    .navbar-nav .btn-link {
+        color: #FFFFFF; /* White button text */
+        background-color: transparent;
+        border: 1px solid #FFA500; /* Orange border for sporty accent */
+        padding: 5px 15px;
+        border-radius: 25px;
+        transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+        .navbar-nav .btn-link:hover {
+            color: #212529; /* Invert text color */
+            background-color: #FFA500; /* Orange background on hover */
+            border-color: #FFFFFF;
+        }
+
+    .navbar-nav .form-inline {
+        display: inline;
+    }
+
+    /* Greetings text styling */
+    .navbar-nav .nav-link[title="Manage"] {
+        font-size: 18px;
+        color: #007BFF; /* Electric Blue for a vibrant look */
+        font-style: italic;
+    }
+
+    /* Register/Login buttons */
+    .navbar-nav .nav-link[asp-page="/Account/Register"],
+    .navbar-nav .nav-link[asp-page="/Account/Login"] {
+        background-color: #007BFF; /* Electric Blue */
+        padding: 8px 15px;
+        border-radius: 25px;
+        color: #FFFFFF;
+        font-size: 16px;
+        font-weight: bold;
+        transition: background-color 0.3s ease, transform 0.2s ease;
+    }
+
+        .navbar-nav .nav-link[asp-page="/Account/Register"]:hover,
+        .navbar-nav .nav-link[asp-page="/Account/Login"]:hover {
+            background-color: #32CD32; /* Neon green on hover */
+            transform: scale(1.05);
+            text-shadow: 0px 0px 5px rgba(50, 205, 50, 0.8); /* Neon glow effect */
+        }

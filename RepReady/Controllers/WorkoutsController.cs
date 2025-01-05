@@ -30,12 +30,16 @@ namespace RepReady.Controllers
 
             var userId = _userManager.GetUserId(User);
 
+            // List of workouts
+            List<Workout> workoutsPage;
+
             if (User.IsInRole("Admin"))
             {
                 var workouts = db.Workouts.Include("Category").OrderBy(w => w.Date);
 
                 // Pass the workouts to the view for display
                 ViewBag.Workouts = workouts;
+                workoutsPage = workouts.ToList();
             }
             else
             {
@@ -64,7 +68,14 @@ namespace RepReady.Controllers
 
                 // Pass the workouts to the view for display
                 ViewBag.Workouts = workouts;
+                workoutsPage = workouts.ToList();
             }
+
+            // Workouts per page
+            int _perPage = 3;
+
+            
+
 
             if (TempData.ContainsKey("message"))
             {
@@ -75,6 +86,27 @@ namespace RepReady.Controllers
             ViewBag.InvitationsCount = db.WorkoutInvitations
                                         .Where(wi => wi.UserId == userId && wi.Accepted == false)
                                         .Count();
+
+            // Total number of workouts
+            int totalWorkouts = workoutsPage.Count;
+
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+
+            var offset = 0;
+
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+
+            var paginatedWorkouts = workoutsPage.Skip(offset).Take(_perPage);
+
+            ViewBag.lastPage = Math.Ceiling((float)totalWorkouts / (float)_perPage);
+
+            ViewBag.Workouts = paginatedWorkouts;
+
+            ViewBag.PaginationBaseUrl = "/Workouts/Index?page";
+
             return View();
         }
 
@@ -110,6 +142,32 @@ namespace RepReady.Controllers
                 ViewBag.Message = TempData["message"];
                 ViewBag.Alert = TempData["messageType"];
             }
+
+            var exercisesPage = workout.Exercises;
+
+            // Exercises per page
+            int _perPage = 3;
+
+            // Total number of exercises
+            int totalExercises = exercisesPage.Count;
+
+            var currentPage = Convert.ToInt32(HttpContext.Request.Query["page"]);
+
+            var offset = 0;
+
+            if (!currentPage.Equals(0))
+            {
+                offset = (currentPage - 1) * _perPage;
+            }
+
+            var paginatedExercises = exercisesPage.Skip(offset).Take(_perPage);
+
+            ViewBag.lastPage = Math.Ceiling((float)totalExercises / (float)_perPage);
+
+            ViewBag.Exercises = paginatedExercises;
+
+            ViewBag.PaginationBaseUrl = "/Workouts/Show/" + workout.Id + "/?page";
+
             return View(workout);
         }
 
