@@ -1,26 +1,26 @@
-﻿
-<h2>Lista modele</h2>
-<br />
+﻿<h2 class="text-center mb-4">Lista Modelelor de Exerciții</h2>
 
 
-@foreach (var template in ViewBag.ExerciseTemplates)
-{
-    <div class="card-body">
-        <div class="form-group">
-            <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i>@template.Title</div>
-            <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i>@template.Description</div>
-            <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i>@template.Reps</div>
-        </div>
-        <a class="btn btn-success" asp-controller="Exercises" asp-action="NewTemplate" asp-route-templateId="@template.Id" asp-route-workoutId="@ViewBag.WorkoutId">Folosește model</a>
-
+<div class="container-container">
+    <div class="row">
+        @foreach (var template in ViewBag.ExerciseTemplates)
+        {
+            <div class="col-md-4 mb-4">
+                <div class="exercise-card p-4 border rounded-3 shadow-lg">
+                    <div class="exercise-header mb-3">
+                        <h3 class="exercise-title text-center text-primary">@template.Title</h3>
+                    </div>
+                    <div class="exercise-details mb-3">
+                        <p><strong>Description:</strong> @template.Description</p>
+                        <p><strong>Reps:</strong> @template.Reps</p>
+                    </div>
+                    <div class="d-flex justify-content-center">
+                        <a class="btn btn-primary" asp-controller="Exercises" asp-action="NewTemplate" asp-route-templateId="@template.Id" asp-route-workoutId="@ViewBag.WorkoutId">
+                            Folosește model
+                        </a>
+                    </div>
+                </div>
+            </div>
+        }
     </div>
-    <br />
-
-    
-
-    <br />
-    <br />
-}
-
-<br />
-
+</div>

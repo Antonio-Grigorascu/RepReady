@@ -1,18 +1,21 @@
-﻿<form method="post" asp-action="New" asp-controller="WorkoutInvitations">
+﻿
+<div class="invitation-container">
+    <form method="post" asp-action="New" asp-controller="WorkoutInvitations" class="invitation-form">
+        <div class="form-container-inv">
+            <h2 class="form-title-inv text-center-inv mb-4">Trimite o invitație</h2>
 
-    <div class="form-group">
-        <label for="email">User Email</label>
-        <input type="email" id="email" name="Email" class="form-control" required />
-    </div>
+            <div class="form-group-inv mb-4">
+                <label for="email" class="form-label-inv">User Email</label>
+                <input type="email" id="email" name="Email" class="form-control-inv" required placeholder="Adresa de email..." />
+            </div>
 
-    <!-- WorkoutId -->
-    <div class="form-group">
-        <input type="hidden" name="WorkoutId" value="@ViewBag.Workout.Id" />
-    </div>
+            <div class="form-group-inv">
+                <input type="hidden" name="WorkoutId" value="@ViewBag.Workout.Id" />
+            </div>
 
-    <br />
-
-    <!-- Submit Button -->
-    <button type="submit" class="btn btn-success">Trimite invitație</button>
-
-</form>
+            <div class="text-center-inv">
+                <button type="submit" class="btn btn-primary submit-btn-inv">Trimite invitație</button>
+            </div>
+        </div>
+    </form>
+</div>

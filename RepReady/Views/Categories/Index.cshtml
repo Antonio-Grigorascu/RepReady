@@ -1,36 +1,54 @@
 ﻿@{
-    ViewBag.Title = "Lista categorii";
+    ViewBag.Title = "Lista Categorii";
 }
-<h2>@ViewBag.Title</h2>
-<br />  
+<h2 class="text-center my-4 text-primary">@ViewBag.Title</h2>
+
 @if (TempData.ContainsKey("message"))
 {
-    <h1>@ViewBag.message</h1>
-}
-<br />
-
-
-@foreach (RepReady.Models.Category category in ViewBag.Categories)
-{
-    <div class="form-group">
-        <div class="alert-success px-1 align-content-center"><i class="bi bi-globe"></i> @category.Name</div>
+    <div class="alert alert-info text-center">
+        <strong>@ViewBag.message</strong>
     </div>
-    <br />
-    
-    @if (ViewBag.EsteAdmin == true)
-    {
-        <a class="btn alert-success" asp-controller="Categories" asp-action="Show" asp-route-id="@category.Id">Afisare categorie</a>
-        <a class="btn alert-success" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">Editare categorie</a>
-    }
-    
-    <br />
-    <br />
 }
 <br />
-@if(ViewBag.EsteAdmin == true)
+
+<!-- Categories Grid -->
+<div class="container">
+    <div class="row g-4">
+        @foreach (RepReady.Models.Category category in ViewBag.Categories)
+        {
+            <div class="col-md-4 col-sm-6 col-lg-3">
+                <!-- Category Card -->
+                <div class="card shadow-sm border-0 h-100">
+                    <div class="card-body text-center">
+                        <h5 class="card-title text-success fw-bold">
+                            <i class="bi bi-tags-fill me-2"></i>@category.Name
+                        </h5>
+                        <hr class="my-3">
+                        <!-- Admin Actions -->
+                        @if (ViewBag.EsteAdmin == true)
+                        {
+                            <div class="d-flex justify-content-center gap-2">
+                                <a class="btn btn-outline-primary btn-sm" asp-controller="Categories" asp-action="Show" asp-route-id="@category.Id">
+                                    <i class="bi bi-eye"></i> Vizualizare
+                                </a>
+                                <a class="btn btn-outline-warning btn-sm" asp-controller="Categories" asp-action="Edit" asp-route-id="@category.Id">
+                                    <i class="bi bi-pencil-square"></i> Editare
+                                </a>
+                            </div>
+                        }
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+<!-- Add Category Button -->
+@if (ViewBag.EsteAdmin == true)
 {
-    <a class="btn btn-success" asp-controller="Categories" asp-action="New">Adauga o noua categorie</a>
+    <div class="text-center mt-5">
+        <a class="btn btn-success btn-lg" asp-controller="Categories" asp-action="New">
+            <i class="bi bi-plus-circle"></i> Adaugă o nouă categorie
+        </a>
+    </div>
 }
-
-<br />
-

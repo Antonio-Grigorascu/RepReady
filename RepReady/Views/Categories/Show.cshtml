@@ -1,18 +1,33 @@
-﻿model RepReady.Models.Category
+﻿@model RepReady.Models.Category
 @{
-    ViewBag.Title = "Afisare categorie";
+    ViewBag.Title = "Afișare Categorie";
 }
-<h2>@ViewBag.Title</h2>
-<br />
-<p>@Model.Name</p>
+<div class="container mt-5">
+    <!-- Page Title -->
+    <h2 class="text-center text-primary">@ViewBag.Title</h2>
+    <hr class="mb-4">
 
-<form method="post" asp-controller="Categories" asp-action="Delete"
-      asp-route-id="@Model.Id">
-    <button class="btn btn-danger" type="submit">Sterge categoria</button>
-</form>
-<br />
-<a class="btn alert-success" href="/Categories/Index/">Afisare lista categorii</a>
-<br />
-<hr />
-<br />
+    <!-- Category Information -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body text-center">
+            <h3 class="card-title text-success fw-bold">
+                <i class="bi bi-tag-fill me-2"></i> @Model.Name
+            </h3>
+        </div>
+    </div>
 
+    <!-- Actions -->
+    <div class="d-flex justify-content-center gap-3 mt-4">
+        <!-- Delete Button -->
+        <form method="post" asp-controller="Categories" asp-action="Delete" asp-route-id="@Model.Id" class="d-inline">
+            <button class="btn btn-danger btn-lg">
+                <i class="bi bi-trash"></i> Șterge Categoria
+            </button>
+        </form>
+
+        <!-- Back to Categories List -->
+        <a class="btn btn-outline-success btn-lg" href="/Categories/Index/">
+            <i class="bi bi-arrow-left-circle"></i> Înapoi la Lista Categorii
+        </a>
+    </div>
+</div>

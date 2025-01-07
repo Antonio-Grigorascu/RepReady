@@ -888,3 +888,5 @@ C:\Users\Public\Dezvoltarea Aplicatiilor Web\RepReady\RepReady\obj\Debug\net8.0\
 C:\Users\Public\Dezvoltarea Aplicatiilor Web\RepReady\RepReady\obj\Debug\net8.0\RepReady.pdb
 C:\Users\Public\Dezvoltarea Aplicatiilor Web\RepReady\RepReady\obj\Debug\net8.0\RepReady.genruntimeconfig.cache
 C:\Users\Public\Dezvoltarea Aplicatiilor Web\RepReady\RepReady\obj\Debug\net8.0\ref\RepReady.dll
+C:\Users\PC\source\repos\RepReadyGithub\RepReady\bin\Debug\net8.0\MySqlConnector.dll
+C:\Users\PC\source\repos\RepReadyGithub\RepReady\bin\Debug\net8.0\Pomelo.EntityFrameworkCore.MySql.dll

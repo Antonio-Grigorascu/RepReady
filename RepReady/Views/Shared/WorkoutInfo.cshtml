@@ -1,11 +1,48 @@
 ﻿@model RepReady.Models.Workout
 
-<div class="card-body">
-    <h3 class="card-title alert-success py-3 px-3 rounded-2">@Model.Name</h3>
-    <div class="d-flex justify-content-between flex-row mt-5">
-        <div><i class="bi bi-globe"></i> @Model.Category.Name</div>
-        <div><i class="bi "></i> @Model.Duration</div>
-        <div><i class="bi bi-person"></i> @ViewBag.CreatorName</div>
-        <span class="alert-success">@Model.Date</span>
+<div class="card shadow-lg mb-4">
+    <div class="card-body p-4">
+        <!-- Workout Title -->
+        <h3 class="card-title text-center text-primary fw-bold mb-3">
+            <i class="bi bi-heartbeat me-2"></i>@Model.Name
+        </h3>
+
+        <!-- Workout Details -->
+        <div class="row text-center">
+            <!-- Category -->
+            <div class="col-md-4 col-sm-12 mb-3">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <i class="bi bi-tags-fill text-success fs-4"></i>
+                    <p class="mt-2 mb-0 fw-bold">Categorie</p>
+                    <span class="text-muted">@Model.Category.Name</span>
+                </div>
+            </div>
+
+            <!-- Duration -->
+            <div class="col-md-4 col-sm-12 mb-3">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <i class="bi bi-clock-fill text-warning fs-4"></i>
+                    <p class="mt-2 mb-0 fw-bold">Durată</p>
+                    <span class="text-muted">@Model.Duration minute</span>
+                </div>
+            </div>
+
+            <!-- Creator -->
+            <div class="col-md-4 col-sm-12 mb-3">
+                <div class="p-3 bg-light rounded shadow-sm">
+                    <i class="bi bi-person-fill text-primary fs-4"></i>
+                    <p class="mt-2 mb-0 fw-bold">Creator</p>
+                    <span class="text-muted">@ViewBag.CreatorName</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- Date -->
+        <div class="text-center mt-4">
+            <span class="badge bg-success fs-6 p-2">
+                <i class="bi bi-calendar-event me-1"></i>
+                Data: @Model.Date.ToString("dd MMMM yyyy, HH:mm")
+            </span>
+        </div>
     </div>
 </div>

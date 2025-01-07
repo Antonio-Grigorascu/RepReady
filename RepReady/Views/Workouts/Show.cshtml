@@ -1,109 +1,110 @@
 ﻿@model RepReady.Models.Workout
 
-@if (TempData["message"] != null)
-{
-    <div class="alert @ViewBag.Alert p-3 rounded-3 text-center mb-5">
-        @ViewBag.Message
-    </div>
-}
-<br />
-
-<div class="card">
-    <partial name="WorkoutInfo" model="Model"></partial>
-    @if (Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
+<div class="container mt-5">
+    @if (TempData["message"] != null)
     {
-        <div class="d-flex flex-row justify-content-between">
-            <a class="btn btn-success" asp-controller="Workouts" asp-action="Edit" asp-route-id="@Model.Id">Editeaza antrenament</a>
-
-
-            @if (ViewBag.EsteAdmin == true && ViewBag.EsteCreator == false)
-            {
-                <a class="btn btn-success" asp-controller="Workouts" asp-action="TakeOver" asp-route-id="@Model.Id">Preia antrenamentul</a>
-            }
-
-
-            <form method="post" asp-controller="Workouts" asp-action="Delete" asp-route-id="@Model.Id">
-                <button class="btn btn-danger" type="submit">Sterge antrenament</button>
-            </form>
+        <div class="alert @ViewBag.Alert p-3 rounded-3 text-center mb-5">
+            @ViewBag.Message
         </div>
-
-        @* We passed the WorkoutId to the controller to know in which Workout we add the invitation *@
-        TempData["workoutId"] = @Model.Id;
-        <a class="btn btn-success" asp-controller="WorkoutInvitations" asp-action="New">Invită participanți</a>
-        
     }
-    @if (Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true || ViewBag.EsteOrganizer == true)
-    {
-        @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
-        TempData["workoutId"] = @Model.Id;
-        <a class="btn btn-success" asp-controller="Exercises" asp-action="New">Adauga exercițiu</a>
-        TempData["workoutId"] = @Model.Id;
-        <a class="btn btn-success" asp-controller="ExerciseTemplates" asp-action="Index" asp-route-workoutId="@Model.Id" >Foloseste model</a>
-    }
-</div>
-<br />
-<br />
-
-<h2>Participanți:</h2>
-@foreach(var user in Model.Users)
-{
-    <p>@user.UserName</p>
-}
-
-
- @*Afisare exercitii impreuna cu butoanele de editare si stergere*@ 
-@foreach (var exercise in ViewBag.Exercises)
-{
-    <div class="card">
-
-        <div class="card-body">
-
-            <h3 class="card-title alert-success py-3 px-3 rounded-2">@exercise.Title</h3>
-
-            <div class="d-flex justify-content-between flex-row mt-5">
-
-                <a class="btn btn-success" href="/Exercises/Show/@exercise.Id">Afisare exercițiu</a>
-
-                <span class="alert-success px-1 align-content-center">@exercise.Description</span>
-                <span class="alert-success px-1 align-content-center">@exercise.Reps</span>
-                <span class="alert-success px-1 align-content-center">@exercise.Sets</span>
-                <span class="alert-success px-1 align-content-center">Start: @exercise.Start.ToString("g")</span>
-                <span class="alert-success px-1 align-content-center">Finish: @exercise.Finish.ToString("g")</span>
-                <!-- Afisam numarul de utilizatori si un link catre un patial care contine lista de useri care participa la exercitiu -->
-
-            </div>
-
-        </div>
-
-    </div>
-
     <br />
-    <br />      
 
-}
-
-
-@* Afisarea paginata a exercitiilor *@
-
-<div>
-    <nav aria-label="Page navigation example">
-        <ul class="pagination">
-            <li class="page-item">
-                <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                </a>
-            </li>
-
-            @for (int i = 1; i <= ViewBag.lastPage; i++)
+    <div class="card shadow-lg mb-4">
+        <partial name="WorkoutInfo" model="Model"></partial>
+        <div class="d-flex flex-wrap justify-content-center gap-2">
+        
+            @if (Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true)
             {
-                <li class="page-item"> <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@(i)</a> </li>
-            }
 
-            <li class="page-item">
-                <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                </a>
-            </li>
+                <a class="btn btn-primary" asp-controller="Workouts" asp-action="Edit" asp-route-id="@Model.Id">Editeaza antrenament</a>
+
+
+                    @if (ViewBag.EsteAdmin == true && ViewBag.EsteCreator == false)
+                    {
+                    <a class="btn btn-primary" asp-controller="Workouts" asp-action="TakeOver" asp-route-id="@Model.Id">Preia antrenamentul</a>
+                    }
+
+
+                    <form method="post" asp-controller="Workouts" asp-action="Delete" asp-route-id="@Model.Id">
+                        <button class="btn btn-danger" type="submit">Sterge antrenament</button>
+                    </form>
+        
+
+                @* We passed the WorkoutId to the controller to know in which Workout we add the invitation *@
+                TempData["workoutId"] = @Model.Id;
+                <a class="btn btn-primary" asp-controller="WorkoutInvitations" asp-action="New">Invită participanți</a>
+        
+            }
+            @if (Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true || ViewBag.EsteOrganizer == true)
+            {
+                @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
+                TempData["workoutId"] = @Model.Id;
+                <a class="btn btn-primary" asp-controller="Exercises" asp-action="New">Adauga exercițiu</a>
+                TempData["workoutId"] = @Model.Id;
+                <a class="btn btn-primary" asp-controller="ExerciseTemplates" asp-action="Index" asp-route-workoutId="@Model.Id">Foloseste model</a>
+            }
+        </div>
+    </div>
+    <br />
+    <br />
+
+    <div class="mb-4">
+        <h4 class="text-primary">Participanți:</h4>
+        <ul class="list-group">
+            @foreach (var user in Model.Users)
+            {
+                <li class="list-group-item">@user.UserName</li>
+            }
         </ul>
-    </nav>
+    </div>
+
+
+
+     @*Afisare exercitii impreuna cu butoanele de editare si stergere*@ 
+    <div>
+        <h4 class="text-primary mb-3">Exerciții:</h4>
+
+        @foreach (var exercise in ViewBag.Exercises)
+        {
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title">@exercise.Title</h5>
+                    <p class="card-text text-muted">@exercise.Description</p>
+                    <div class="d-flex flex-wrap gap-3">
+                        <span class="badge bg-primary">Reps: @exercise.Reps</span>
+                        <span class="badge bg-success">Sets: @exercise.Sets</span>
+                        <span class="badge bg-info">Start: @exercise.Start.ToString("g")</span>
+                        <span class="badge bg-warning">Finish: @exercise.Finish.ToString("g")</span>
+                    </div>
+                    <a class="btn btn-outline-primary mt-3" href="/Exercises/Show/@exercise.Id">Afișează Exercițiu</a>
+                </div>
+            </div>
+        }
+    </div>
+
+
+    @* Afisarea paginata a exercitiilor *@
+
+    <div>
+        <nav aria-label="Page navigation example">
+            <ul class="pagination">
+                <li class="page-item">
+                    <a class="page-link" href="@ViewBag.PaginationBaseUrl=1" aria-label="Previous">
+                        <span aria-hidden="true">&laquo;</span>
+                    </a>
+                </li>
+
+                @for (int i = 1; i <= ViewBag.lastPage; i++)
+                {
+                    <li class="page-item"> <a class="page-link" href="@ViewBag.PaginationBaseUrl=@i">@(i)</a> </li>
+                }
+
+                <li class="page-item">
+                    <a class="page-link" href="@ViewBag.PaginationBaseUrl=@(ViewBag.lastPage)" aria-label="Next">
+                        <span aria-hidden="true">&raquo;</span>
+                    </a>
+                </li>
+            </ul>
+        </nav>
+    </div>
 </div>

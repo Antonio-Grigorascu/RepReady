@@ -1,5 +1,5 @@
 ﻿
-<h1>Workout Invitations</h1>
+<h1 class="text-center mb-4">Invitații</h1>
 
 @if (TempData["message"] != null)
 {
@@ -9,24 +9,25 @@
 }
 <br />
 
-@foreach(var invitation in ViewBag.Invitations)
-{
-    @if(invitation.Accepted == false)
+<div class="invitations-container">
+    @foreach (var invitation in ViewBag.Invitations)
     {
-        <div class="d-flex flex-row justify-content-between">
-            <h1>Invitație</h1>
-            <p>@invitation.WorkoutName</p>
-            <p>@invitation.InvitedBy</p>
-            <form method="post" asp-action="Accept" asp-controller="WorkoutInvitations" asp-route-id="@invitation.Id">
-                <button type="submit" class="btn btn-success">Accept</button>
-            </form>
+        @if (invitation.Accepted == false)
+        {
+            <div class="invitation-card mb-4 p-4 border rounded-3 shadow-lg">
+                <h3 class="invitation-title">@invitation.WorkoutName</h3>
+                <p class="invited-by">Primită de la: <strong>@invitation.InvitedBy</strong></p>
 
-            <form method="post" asp-action="Reject" asp-controller="WorkoutInvitations" asp-route-id="@invitation.Id">
-                <button type="submit" class="btn btn-danger">Reject</button>
-            </form>
-        </div>
+                <div class="button-group d-flex justify-content-around mt-3">
+                    <form method="post" asp-action="Accept" asp-controller="WorkoutInvitations" asp-route-id="@invitation.Id">
+                        <button type="submit" class="btn btn-success px-4 py-2">Acceptă</button>
+                    </form>
+
+                    <form method="post" asp-action="Reject" asp-controller="WorkoutInvitations" asp-route-id="@invitation.Id">
+                        <button type="submit" class="btn btn-danger px-4 py-2">Refuză</button>
+                    </form>
+                </div>
+            </div>
+        }
     }
-    
-
-    
-}
+</div>

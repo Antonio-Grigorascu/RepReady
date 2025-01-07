@@ -4,15 +4,23 @@
 
 @if (ViewBag.InvitationsCount > 0)
 {
-    @if (ViewBag.InvitationsCount == 1)
-    {
-        <div class="alert-danger">Aveti o invitație nouă</div>
-    }
-    else
-    {
-        <div class="alert-danger">Aveti @ViewBag.InvitationsCount invitații noi</div>
-    }
+        <div class="invitation-alert">
+            <div class="alert-content">
+                <span class="alert-icon">
+                    <i class="bi bi-envelope-fill"></i>
+                </span>
+            @if (ViewBag.InvitationsCount == 1)
+            {
+                        <span class="alert-text">Aveți o invitație nouă!</span>
+            }
+            else
+            {
+                        <span class="alert-text">Aveți @ViewBag.InvitationsCount invitații noi!</span>
+            }
+            </div>
+        </div>
 }
+
 
 
 @if(ViewBag.Message != null)
@@ -23,23 +31,35 @@
 }
 <br />
 
-<a class="btn btn-success" asp-controller="Workouts" asp-action="New">Adauga antrenament</a>
-<br/>
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h4>Toate Antrenamentele</h4>
+    <a class="btn btn-primary" asp-controller="Workouts" asp-action="New">Adaugă Antrenament</a>
+</div>
 
- @foreach (var workout in ViewBag.Workouts)
-{
-    <div class="card">
-        <partial name="WorkoutInfo" model="workout"></partial>
-        <a class="btn btn-success" asp-controller="Workouts" asp-action="Show" asp-route-id="@workout.Id">Afisare antrenament</a>
-    </div>
-    <br />
-    <br />
-} 
+<div class="row card-size">
+    @foreach (var workout in ViewBag.Workouts)
+    {
+        <div class="col-md-4 mb-4 d-flex justify-content-center">
+            <div class="card workout-card shadow-sm d-flex flex-column justify-content-between">
+                <div class="card-body">
+                    <h5 class="card-title workout-title mb-3">@workout.Name</h5>
+                    <p class="card-text workout-description">@workout.Description</p>
+                </div>
+                <div class="card-footer text-center">
+                    <a class="btn btn-primary workout-btn" asp-controller="Workouts" asp-action="Show" asp-route-id="@workout.Id">Afișare Antrenament</a>
+                </div>
+            </div>
+        </div>
+
+
+
+    }
+</div>
 
 
 @* Afisarea paginata a articolelor *@
 
-<div>
+<div class="page-navigation-btn">
     <nav aria-label="Page navigation example">
         <ul class="pagination">
             <li class="page-item">

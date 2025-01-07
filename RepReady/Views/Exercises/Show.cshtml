@@ -1,170 +1,139 @@
 ﻿@model RepReady.Models.Exercise
 
+<div class="container mt-5">
+    <!-- Exercise Details Section -->
+    <div class="card shadow-lg mb-5">
+        <div class="card-body">
+            <!-- Title and Description -->
+            <h2 class="card-title text-primary text-center">@Model.Title</h2>
+            <p class="text-muted text-center mb-4">@Model.Description</p>
+            <p class="text-center">Creator: <i class="bi bi-person"></i> <strong>@ViewBag.CreatorName</strong></p>
 
-@* Exercise details card *@
-<div class="card">
-    <div class="card-body">
-        <h3 class="card-title alert-success py-3 px-3 rounded-2">@Model.Title</h3>
+            <!-- Details -->
+            <div class="d-flex flex-wrap justify-content-center gap-3 my-4">
+                <span class="badge bg-success p-3">Repetări: @Model.Reps</span>
+                <span class="badge bg-primary p-3">Seturi: @Model.Sets</span>
+                @if (ViewBag.Status != null)
+                {
+                    <span class="badge bg-info p-3">
+                        Status: @(ViewBag.Status == 1 ? "Complet" : (ViewBag.Status == -1 ? "Incomplet" : "În progres"))
+                    </span>
+                }
+                <span class="badge bg-warning p-3">Start: @Model.Start.ToString("g")</span>
+                <span class="badge bg-dark p-3">Finish: @Model.Finish.ToString("g")</span>
+            </div>
 
-        <div class="card-text">@Model.Description</div>
-        <div>Creator: <i class="bi bi-person"></i> @ViewBag.CreatorName</div>
-
-        <div class="d-flex justify-content-between flex-row mt-5">
-            <span class="alert-success">Repetari: @Model.Reps</span>
-            <span class="alert-success">Seturi: @Model.Sets</span>
-            @if(ViewBag.Status != null)
-            {
-                <span class="alert-success">Status: @(ViewBag.Status == 1 ? "Complet" : (ViewBag.Status == -1 ? "Incomplet" : "În progres"))</span>
-            }
-            <span class="alert-success">Start: @Model.Start.ToString("g")</span>
-            <span class="alert-success">Finish: @Model.Finish.ToString("g")</span>
-
-        </div>
-
-        
-        <div>
+            <!-- Image/Video Section -->
             @if (Model.Image != null)
             {
-                @if (Model.Image.Contains(".mp4") || Model.Image.Contains(".mov"))
-                {
-                    <video width="550" height="300" controls>
-                        <source src="@Model.Image" type="video/mp4">
-                        Your browser does not support the video tag.
-                    </video>
-                }
-                else
-                {
-                    <img src="@Model.Image" alt="Article Image" style="width:100%; height: 450px; object-fit: cover" />
-                }
-            }
-        </div>
-        
-
-    </div>
-
-    <hr />
-
-    <div class="d-flex flex-row justify-content-between">
-        <form method="post" asp-controller="Exercises" asp-action="ChangeStatus" asp-route-ExerciseId="@Model.Id" asp-route-UserId="@ViewBag.CurrentUser">
-            @if (ViewBag.Status != null)
-            {
-                <div class="d-flex flex-row justify-content-between">
-                    @if (ViewBag.Status == -1)
+                <div class="text-center mb-4">
+                    @if (Model.Image.Contains(".mp4") || Model.Image.Contains(".mov"))
                     {
-                        <button class="btn btn-success" type="submit">Începe exercițiul</button>
-                    }
-                    else if (ViewBag.Status == 0)
-                    {
-                        <button class="btn btn-warning" type="submit">Finalizează exercițiul</button>
+                        <video class="img-fluid rounded shadow" controls>
+                            <source src="@Model.Image" type="video/mp4">
+                            Your browser does not support the video tag.
+                        </video>
                     }
                     else
                     {
-                    
-                        <button class="btn btn-danger" type="submit">Reia exercițiul</button>
+                        <img src="@Model.Image" alt="Exercise Media" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: cover;">
                     }
                 </div>
             }
-        </form>
 
+            <!-- Action Buttons -->
+            <div class="d-flex justify-content-center gap-3">
+                <form method="post" asp-controller="Exercises" asp-action="ChangeStatus" asp-route-ExerciseId="@Model.Id" asp-route-UserId="@ViewBag.CurrentUser">
+                    @if (ViewBag.Status != null)
+                    {
+                        @if (ViewBag.Status == -1)
+                        {
+                            <button class="btn btn-success">Începe Exercițiul</button>
+                        }
+                        else if (ViewBag.Status == 0)
+                        {
+                            <button class="btn btn-warning">Finalizează Exercițiul</button>
+                        }
+                        else
+                        {
+                            <button class="btn btn-danger">Reia Exercițiul</button>
+                        }
+                    }
+                </form>
+                @if (ViewBag.EsteAdmin == true || ViewBag.EsteCreator == true)
+                {
+                    <a class="btn btn-info" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează</a>
+                    <a class="btn btn-secondary" asp-controller="Exercises" asp-action="AddUsers" asp-route-id="@Model.Id">Adaugă Utilizatori</a>
+                    <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id" class="d-inline">
+                        <button class="btn btn-danger" type="submit">Șterge</button>
+                    </form>
+                }
+            </div>
+        </div>
     </div>
 
-    <hr />
-
-    @if(ViewBag.EsteAdmin == true || ViewBag.EsteCreator == true)
-    {
-        <div class="d-flex flex-row justify-content-between">
-
-            <a class="btn btn-success" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează exercițiul</a>
-
-            <a class="btn btn-success" asp-controller="Exercises" asp-action="AddUsers" asp-route-id="@Model.Id">Editează utilizatori</a>
-        
-        
-            <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id">
-                <button class="btn btn-danger" type="submit">Sterge exercitiu</button>
-            </form>
-        </div>
-    }
-</div>
-
-<br />
-<br />
-
-<h2>Participanți:</h2>
-@foreach (var user in Model.Users)
-{
-    <p>@user.UserName</p>
-}
-
-@* Display comments section *@
-@foreach (var comm in Model.Comments)
-{
-    <div class="container">
-        <div class="row">
-            <div class="col-md-2"></div>
-
-            <div class="col-md-8">
-                <div>
-                    <p>@comm.Content</p>
-                    <small>@comm.Date</small>
-                    <strong><i class="bi bi-person"></i>@comm.User.UserName</strong>
-                    @if(@comm.WasEdited == true)
-                    {
-                        <small>Edited</small>
-                    }
-                    
-                </div>
-                <br>
-
-                @if(ViewBag.EsteAdmin == true || ViewBag.CurrentUser == comm.User.Id)
+    <!-- Participants Section -->
+    <div class="card shadow-lg mb-5">
+        <div class="card-body">
+            <h4 class="text-primary mb-3">Participanți:</h4>
+            <ul class="list-group">
+                @foreach (var user in Model.Users)
                 {
-                    <div class="d-flex">
-                        <div>
-                            <a class="btn btn-outline-primary" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
-                                <i class="bi bi-pencil-square"></i>Editeaza
-                            </a>
-                        </div>
+                    <li class="list-group-item">@user.UserName</li>
+                }
+            </ul>
+        </div>
+    </div>
 
-                        <div>
-                            <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id">
-                                <button class="btn btn-outline-danger" type="submit">
-                                    <i class="bi bi-trash"></i>Sterge
-                                </button>
-                            </form>
+    <!-- Comments Section -->
+    <div class="card shadow-lg mb-5">
+        <div class="card-body">
+            <h4 class="text-primary mb-4">Comentarii:</h4>
+
+            <!-- Comments List -->
+            @if (Model.Comments.Any())
+            {
+                @foreach (var comm in Model.Comments)
+                {
+                    <div class="mb-4">
+                        <div class="border rounded p-3">
+                            <p>@comm.Content</p>
+                            <small class="text-muted">@comm.Date - <strong>@comm.User.UserName</strong></small>
+                            @if (comm.WasEdited)
+                            {
+                                <small class="text-muted">(Edited)</small>
+                            }
                         </div>
+                        @if (ViewBag.EsteAdmin == true || ViewBag.CurrentUser == comm.User.Id)
+                        {
+                            <div class="d-flex gap-2 mt-2">
+                                <a class="btn btn-outline-primary btn-sm" asp-controller="Comments" asp-action="Edit" asp-route-id="@comm.Id">
+                                    <i class="bi bi-pencil-square"></i> Editează
+                                </a>
+                                <form method="post" asp-controller="Comments" asp-action="Delete" asp-route-id="@comm.Id" class="d-inline">
+                                    <button class="btn btn-outline-danger btn-sm" type="submit">
+                                        <i class="bi bi-trash"></i> Șterge
+                                    </button>
+                                </form>
+                            </div>
+                        }
                     </div>
                 }
+            }
+            else
+            {
+                <p class="text-muted">Nu există comentarii.</p>
+            }
 
-                <br />
-            </div>
-
-            <div class="col-md-2"></div>
-        </div>
-    </div>
-}
-
-@* Add comment form *@
-<div class="container">
-    <div class="row">
-        <div class="col-md-2"></div>
-
-        <div class="col-md-8">
-            <div class="card">
+            <!-- Add Comment Form -->
+            <div class="mt-4">
+                <h5>Adaugă un comentariu:</h5>
                 <form method="post" asp-controller="Exercises" asp-action="Show">
-                    <div class="card-body">
-                        <input type="hidden" name="ExerciseId" value="@Model.Id" />
-
-                        <label>Continut comentariu</label> 
-                        <br />
-                        <textarea class="form-control" name="Content"></textarea>
-                        
-                        
-                        <br />
-                        <button class="btn btn-success" type="submit">Adauga comentariul</button>
-                    </div>
+                    <input type="hidden" name="ExerciseId" value="@Model.Id" />
+                    <textarea class="form-control mb-3" name="Content" rows="3" placeholder="Scrie un comentariu..."></textarea>
+                    <button class="btn btn-success" type="submit">Adaugă Comentariul</button>
                 </form>
             </div>
         </div>
-
-        <div class="col-md-2"></div>
     </div>
 </div>

@@ -1,17 +1,33 @@
 ﻿@model RepReady.Models.Category
 @{
-    ViewBag.Title = "Adaugare Categorie";
+    ViewBag.Title = "Adăugare Categorie";
 }
-<h2>Adaugare Categorie</h2>
-<form asp-action="New" asp-controller="Categories" method="post">
-    <div class="form-group">
-        <label asp-for="Name" class="form-label">Denumire categorie</label>
-        <br />
-        <input asp-for="Name" class="form-control" />
-        <span asp-validation-for="Name" class="text-danger"></span>
+
+<div class="container mt-5">
+    <!-- Page Title -->
+    <h2 class="text-center text-primary mb-4">
+        <i class="bi bi-folder-plus me-2"></i> @ViewBag.Title
+    </h2>
+    <hr class="mb-4">
+
+    <!-- Form Card -->
+    <div class="card shadow-sm border-0">
+        <div class="card-body p-4">
+            <form asp-action="New" asp-controller="Categories" method="post">
+                <!-- Category Name -->
+                <div class="form-group mb-4">
+                    <label asp-for="Name" class="form-label fw-bold">Denumire categorie</label>
+                    <input asp-for="Name" class="form-control form-control-lg" placeholder="Introduceți numele categoriei" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+
+                <!-- Submit Button -->
+                <div class="d-grid">
+                    <button class="btn btn-success btn-lg" type="submit">
+                        <i class="bi bi-plus-circle me-2"></i> Adaugă Categorie
+                    </button>
+                </div>
+            </form>
+        </div>
     </div>
-    <br /><br />
-    <button class="btn btn-success" type="submit">Adauga categorie</button>
-</form>
-
-
+</div>

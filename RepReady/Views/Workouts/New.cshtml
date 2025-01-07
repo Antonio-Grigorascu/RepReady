@@ -1,46 +1,57 @@
 ﻿@model RepReady.Models.Workout
-<h2 class="text-center mt-5">Adaugare articol</h2>
-<br />
+
+
+
 <div class="container mt-5">
-    <div class="row">
-        <div class="col-6 offset-3">
-            <form method="post" asp-action="New" asp-controller="Workouts">
-                <div asp-validation-summary="All" class="text-danger"></div>
-                <div class="form-group">
-                    <label asp-for="Name" class="form-label">Titlu Antrenament</label>
-                    <br />
-                    <input asp-for="Name" class="form-control" />
-                    <span asp-validation-for="Name" class="text-danger"></span>
-                    <br /><br />
+    <div class="row justify-content-center">
+        <div class="col-lg-6 col-md-8 col-sm-12">
+            <!-- Title -->
+            <h2 class="text-center mb-4 text-primary">Adăugare Antrenament</h2>
+
+            <!-- Form -->
+            <div class="card shadow-lg">
+                <div class="card-body">
+                    <form method="post" asp-action="New" asp-controller="Workouts">
+                        <!-- Validation Summary -->
+                        <div asp-validation-summary="All" class="alert alert-danger"></div>
+
+                        <!-- Workout Title -->
+                        <div class="mb-4">
+                            <label asp-for="Name" class="form-label fw-bold">Titlu Antrenament</label>
+                            <input asp-for="Name" class="form-control" placeholder="Ex: Cardio intens pentru începători" />
+                            <span asp-validation-for="Name" class="text-danger"></span>
+                        </div>
+
+                        <!-- Workout Description -->
+                        <div class="mb-4">
+                            <label asp-for="Description" class="form-label fw-bold">Descriere Antrenament</label>
+                            <textarea asp-for="Description" class="form-control summernote" rows="4" placeholder="Descrierea antrenamentului..."></textarea>
+                            <span asp-validation-for="Description" class="text-danger"></span>
+                        </div>
+
+                        <!-- Workout Duration -->
+                        <div class="mb-4">
+                            <label asp-for="Duration" class="form-label fw-bold">Durată Antrenament (minute)</label>
+                            <input asp-for="Duration" type="number" class="form-control" placeholder="Ex: 45" />
+                            <span asp-validation-for="Duration" class="text-danger"></span>
+                        </div>
+
+                        <!-- Workout Category -->
+                        <div class="mb-4">
+                            <label for="CategoryId" class="form-label fw-bold">Selectați Categoria</label>
+                            <select asp-for="CategoryId" asp-items="Model.Categ" class="form-select">
+                                <option value="" disabled selected>-- Selectați Categoria --</option>
+                            </select>
+                            <span asp-validation-for="CategoryId" class="text-danger"></span>
+                        </div>
+
+                        <!-- Submit Button -->
+                        <div class="text-center">
+                            <button type="submit" class="btn btn-success btn-lg px-5">Adaugă Antrenament</button>
+                        </div>
+                    </form>
                 </div>
-                <div class="form-group">
-                    <label asp-for="Description" class="form-label">Descriere Antrenament</label>
-                    <br />
-                    <textarea asp-for="Description" class="form-control summernote"></textarea>
-                    <span asp-validation-for="Description" class="text-danger"></span>
-                    <br /><br />
-                </div>
-                <div class="form-group">
-                    <label asp-for="Duration" class="form-label">Durata Antrenament</label>
-                    <br />
-                    <input asp-for="Duration" class="form-control" />
-                    <span asp-validation-for="Duration" class="text-danger"></span>
-                    <br /><br />
-                </div>
-                <div class="form-group">
-                    <label for="CategoryId">Selectati categoria</label>
-                    <br />
-                    <select asp-for="CategoryId" asp-items="Model.Categ" class="form-control">
-                        <option value="">Selectati categoria</option>
-                    </select>
-                    <span asp-validation-for="CategoryId" class="text-danger"></span>
-                    <br />
-                </div>
-                <br />
-                <button class="btn btn-success" type="submit">Adauga antrenament</button>
-            </form>
+            </div>
         </div>
     </div>
 </div>
-
-
