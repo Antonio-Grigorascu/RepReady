@@ -5,6 +5,10 @@
       "PackagePath": "staticwebassets\\RepReady.bundle.scp.css"
     },
     {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\css\\home.css",
+      "PackagePath": "staticwebassets\\css\\home.css"
+    },
+    {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\css\\login.css",
       "PackagePath": "staticwebassets\\css\\login.css"
     },
@@ -17,24 +21,64 @@
       "PackagePath": "staticwebassets\\favicon.ico"
     },
     {
-      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\Workout men chin up low poly.png",
-      "PackagePath": "staticwebassets\\images\\Workout men chin up low poly.png"
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\background-home.jpg",
+      "PackagePath": "staticwebassets\\images\\background-home.jpg"
     },
     {
-      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\bench.jpeg",
-      "PackagePath": "staticwebassets\\images\\bench.jpeg"
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\benchpress.png",
+      "PackagePath": "staticwebassets\\images\\benchpress.png"
     },
     {
-      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\cables_on_bench.png",
-      "PackagePath": "staticwebassets\\images\\cables_on_bench.png"
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\deadlift.webp",
+      "PackagePath": "staticwebassets\\images\\deadlift.webp"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\dips.jpg",
+      "PackagePath": "staticwebassets\\images\\dips.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\dumbell.jpg",
+      "PackagePath": "staticwebassets\\images\\dumbell.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\filler-img.jpg",
+      "PackagePath": "staticwebassets\\images\\filler-img.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\legraises.jpg",
+      "PackagePath": "staticwebassets\\images\\legraises.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\lunges.jpg",
+      "PackagePath": "staticwebassets\\images\\lunges.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\pullup.jpg",
+      "PackagePath": "staticwebassets\\images\\pullup.jpg"
     },
     {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\pushup.jpg",
       "PackagePath": "staticwebassets\\images\\pushup.jpg"
     },
     {
-      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\th.jpeg",
-      "PackagePath": "staticwebassets\\images\\th.jpeg"
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\shoulderpress.webp",
+      "PackagePath": "staticwebassets\\images\\shoulderpress.webp"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\squat.webp",
+      "PackagePath": "staticwebassets\\images\\squat.webp"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\standing-calf-raise-muscles-worked.jpg",
+      "PackagePath": "staticwebassets\\images\\standing-calf-raise-muscles-worked.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\top-view-weights-with-measuring-tape-copy-space.jpg",
+      "PackagePath": "staticwebassets\\images\\top-view-weights-with-measuring-tape-copy-space.jpg"
+    },
+    {
+      "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\images\\workout-about.jpg",
+      "PackagePath": "staticwebassets\\images\\workout-about.jpg"
     },
     {
       "Id": "C:\\Users\\PC\\source\\repos\\RepReadyGithub\\RepReady\\wwwroot\\js\\site.js",

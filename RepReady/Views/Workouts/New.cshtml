@@ -6,7 +6,9 @@
     <div class="row justify-content-center">
         <div class="col-lg-6 col-md-8 col-sm-12">
             <!-- Title -->
-            <h2 class="text-center mb-4 text-primary">Adăugare Antrenament</h2>
+            <h2 class="text-center mb-4 text-primary">
+                Adăugare Antrenament
+            </h2>
 
             <!-- Form -->
             <div class="card shadow-lg">
@@ -14,6 +16,7 @@
                     <form method="post" asp-action="New" asp-controller="Workouts">
                         <!-- Validation Summary -->
                         <div asp-validation-summary="All" class="alert alert-danger"></div>
+                        
 
                         <!-- Workout Title -->
                         <div class="mb-4">
@@ -48,6 +51,13 @@
                         <!-- Submit Button -->
                         <div class="text-center">
                             <button type="submit" class="btn btn-success btn-lg px-5">Adaugă Antrenament</button>
+                        </div>
+
+                        <br />
+                        <div class="alert alert-danger validation-summary-valid">
+                            <ul>
+                                <li style="display:none"></li>
+                            </ul>
                         </div>
                     </form>
                 </div>

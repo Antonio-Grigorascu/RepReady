@@ -1,0 +1,261 @@
+﻿
+/* General Reset */
+body, h1, h2, h3, p, ul, li, a, button {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Arial', sans-serif;
+}
+
+
+/* Title Section */
+.title-container {
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background: url('images/background-home.jpg') no-repeat center center/cover;
+    color: #fff;
+    text-align: center;
+    position: relative;
+    margin-top: 0;
+}
+
+    .title-container .main-title {
+        max-width: 800px;
+    }
+
+    .title-container .title-text {
+        font-size: 3rem;
+        font-weight: bold;
+        text-transform: uppercase;
+        margin-bottom: 1rem;
+    }
+
+    .title-container .subtitle-text {
+        font-size: 1.5rem;
+        margin-bottom: 2rem;
+    }
+
+    .title-container .btn {
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        background-color: #007bff;
+        color: #fff;
+        border: none;
+        border-radius: 5px;
+        text-transform: uppercase;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        transition: background-color 0.3s ease-in-out;
+    }
+
+        .title-container .btn:hover {
+            background-color: #0056b3;
+        }
+
+/* About Section */
+.about-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+    padding: 4rem 2rem;
+    background-color: #f8f9fa;
+}
+
+    .about-container .about-image {
+        flex: 1;
+        max-width: 500px;
+        margin-right: 2rem;
+    }
+
+        .about-container .about-image img {
+            width: 100%;
+            border-radius: 10px;
+        }
+
+    .about-container div {
+        flex: 2;
+        max-width: 600px;
+    }
+
+    .about-container .about-title {
+        font-size: 2.5rem;
+        font-weight: bold;
+        color: #333;
+        margin-bottom: 1rem;
+    }
+
+    .about-container .about-subtitle {
+        font-size: 1.25rem;
+        color: #666;
+        margin-bottom: 2rem;
+    }
+
+    .about-container .about-list {
+        list-style: none;
+    }
+
+        .about-container .about-list li {
+            margin-bottom: 2rem;
+        }
+
+        .about-container .about-list h3 {
+            font-size: 1.5rem;
+            color: #007bff;
+            margin-bottom: 0.5rem;
+        }
+
+        .about-container .about-list p {
+            font-size: 1rem;
+            color: #555;
+            line-height: 1.5;
+        }
+
+    /* Buttons */
+    .about-container .btn {
+        background-color: #007bff;
+        color: #fff;
+        padding: 1rem 2rem;
+        font-size: 1rem;
+        text-transform: uppercase;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s;
+        text-decoration: none;
+    }
+
+        .about-container .btn:hover {
+            background-color: #d43e35;
+        }
+
+/* Templates Show Section */
+.templates-show {
+    background-color: #f8f9fa; /* Light background for the section */
+    padding: 3rem 1.5rem; /* Add some padding */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.templates-show container-container{
+    width: 100%;
+}
+
+.templates-show h2 {
+    font-size: 2rem;
+    font-weight: bold;
+    color: #007bff; /* Blue text */
+    margin-bottom: 2rem;
+    text-align: center;
+}
+
+    .templates-show .exercise-card {
+        background-color: #fff;
+        padding: 1.5rem;
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Slight shadow effect */
+        transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+        text-align: center;
+        margin-bottom: 1.5rem;
+    }
+
+        .templates-show .exercise-card:hover {
+            transform: translateY(-5px); /* Lift the card on hover */
+            box-shadow: 0 8px 15px rgba(0, 0, 0, 0.2); /* Darker shadow on hover */
+        }
+
+        .templates-show .exercise-card .exercise-title {
+            font-size: 1.75rem;
+            font-weight: bold;
+            color: #007bff; /* Primary blue color */
+            margin-bottom: 1rem;
+        }
+
+        .templates-show .exercise-card .exercise-description {
+            font-size: 1rem;
+            color: #333;
+            margin-bottom: 1rem;
+        }
+
+        .templates-show .exercise-card .exercise-details {
+            font-size: 1rem;
+            color: #555;
+            margin-bottom: 1.5rem;
+        }
+
+        .templates-show .exercise-card .btn {
+            background-color: #007bff;
+            color: #fff;
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            border-radius: 5px;
+            text-transform: uppercase;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background-color 0.3s ease-in-out;
+            cursor: pointer;
+        }
+
+            .templates-show .exercise-card .btn:hover {
+                background-color: #0056b3;
+            }
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .templates-show {
+        padding: 2rem 1rem; /* Reduce padding on smaller screens */
+    }
+
+        .templates-show h2 {
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .templates-show .exercise-card {
+            padding: 1rem;
+        }
+
+            .templates-show .exercise-card .exercise-title {
+                font-size: 1.5rem;
+            }
+
+            .templates-show .exercise-card .exercise-description {
+                font-size: 0.875rem;
+            }
+
+            .templates-show .exercise-card .exercise-details {
+                font-size: 0.875rem;
+            }
+}
+
+
+@media (max-width: 900px) {
+    /* Title Section */
+    .title-container {
+        background-image: none; /* Remove the image */
+        background-color: #007bff; /* Set the blue background */
+    }
+
+        .title-container .main-title {
+            max-width: 100%; /* Ensure the title fits properly on mobile */
+        }
+
+        .title-container .title-text {
+            font-size: 2.5rem; /* Adjust title font size for mobile */
+        }
+
+        .title-container .subtitle-text {
+            font-size: 1.25rem; /* Adjust subtitle font size for mobile */
+        }
+
+        /* Additional changes to the button, if required */
+        .title-container .btn {
+            padding: 0.8rem 1.5rem; /* Adjust padding for mobile screens */
+            font-size: 0.9rem; /* Adjust font size */
+        }
+}

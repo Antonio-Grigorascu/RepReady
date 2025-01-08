@@ -1,8 +1,103 @@
 ﻿@{
-    ViewData["Title"] = "Home Page";
+    Layout = null;
 }
 
-<div class="text-center">
-    <h1 class="display-4">Welcome</h1>
-    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
-</div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>RepReady - Home</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/RepReady.styles.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/home.css" asp-append-version="true" />
+    <style>
+        .title-container {
+            background: url('images/background-home.jpg') no-repeat center center/cover;
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+            <div class="container-fluid">
+                <a class="navbar-brand text-primary" asp-area="" asp-controller="Workouts" asp-action="Index">RepReady</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target=".navbar-collapse" aria-controls="navbarSupportedContent"
+                        aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="navbar-collapse collapse d-sm-inline-flex justify-content-between">
+                    <ul class="navbar-nav flex-grow-1">
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="WorkoutInvitations" asp-action="Index">Vezi Invitatii</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Workouts" asp-action="Index">Vezi Antrenamente</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link text-dark" asp-area="" asp-controller="Categories" asp-action="Index">Vezi Categorii</a>
+                        </li>
+                        @if(ViewBag.EsteAdmin == true){
+                            <li>
+                                <a class="nav-link text-dark" asp-area="" asp-controller="Home" asp-action="Dashboard">Dashboard</a>
+                            </li>
+                        }
+                        
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+
+    <section class="title-container">
+        <div class="main-title">
+            <h1 class="title-text">Transform Your Fitness Journey – One Workout at a Time!</h1>
+            <h2 class="subtitle-text">Effortlessly Stay on Track with Our Easy-to-Use Fitness Planner</h2>
+            @if (!User.Identity.IsAuthenticated)
+            {
+                <a href="/Identity/Account/Register" class="btn btn-primary">Înregistrează-te</a>
+            }
+            
+        </div>
+    </section>
+
+    <section class="about-container">
+        <div class="about-image">
+            <img src="images\workout-about.jpg" alt="Fitness Group Workout">
+        </div>
+        <div>
+            <h1 class="about-title">Why choose RepReady?</h1>
+            <h2 class="about-subtitle">Discover the Benefits That Set Us Apart and Propel Your Fitness Journey Forward.</h2>
+            <ul class="about-list">
+                <li>
+                    <h3>Create Your Own Custom Workout</h3>
+                    <p>With RepReady, you have the freedom to design your own workout plans. Tailor your exercises, sets, reps, and rest periods to match your specific fitness goals. Whether you're focusing on strength, endurance, or flexibility, RepReady gives you the tools to build a workout that’s just right for you.</p>
+                </li>
+                <li>
+                    <h3>Choose From Existing Templates</h3>
+                    <p>Not sure where to start? No problem! RepReady offers a wide variety of pre-designed workout templates for all fitness levels. Whether you're a beginner, intermediate, or advanced, you can easily find a template that suits your needs and get started immediately.</p>
+                </li>
+                <li>
+                    <h3>Invite Friends to Your Workout</h3>
+                    <p>Fitness is more fun when you share it with others. RepReady lets you invite friends to join your workouts. Challenge each other, track your progress together, and stay motivated as you work toward your fitness goals. Whether it's a group challenge or a friendly competition, RepReady makes your fitness journey more social and engaging.</p>
+                </li>
+            </ul>
+        </div>
+    </section>
+
+    <section class="templates-show">
+        <partial name="ExerciseTemplatesPartial" model="ViewBag.TemplateModel"></partial>
+    </section>
+
+
+    </body>
+</html>

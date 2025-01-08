@@ -11,16 +11,30 @@
 
             <!-- Details -->
             <div class="d-flex flex-wrap justify-content-center gap-3 my-4">
-                <span class="badge bg-success p-3">Repetări: @Model.Reps</span>
+                <span class="badge bg-primary p-3">Repetări: @Model.Reps</span>
                 <span class="badge bg-primary p-3">Seturi: @Model.Sets</span>
                 @if (ViewBag.Status != null)
                 {
-                    <span class="badge bg-info p-3">
+                   @* <span class="badge bg-primary p-3">
                         Status: @(ViewBag.Status == 1 ? "Complet" : (ViewBag.Status == -1 ? "Incomplet" : "În progres"))
                     </span>
+                    *@
+
+                    @if (ViewBag.Status == -1)
+                    {
+                        <span class="badge bg-danger p-3">Status: Incomplet</span>
+                    }
+                    else if (ViewBag.Status == 0)
+                    {
+                        <span class="badge bg-warning p-3">Status: În progres</span>
+                    }
+                    else
+                    {
+                        <span class="badge bg-success p-3">Status: Complet</span>
+                    }
                 }
-                <span class="badge bg-warning p-3">Start: @Model.Start.ToString("g")</span>
-                <span class="badge bg-dark p-3">Finish: @Model.Finish.ToString("g")</span>
+                <span class="badge bg-primary p-3">Start: @Model.Start.ToString("g")</span>
+                <span class="badge bg-primary p-3">Finish: @Model.Finish.ToString("g")</span>
             </div>
 
             <!-- Image/Video Section -->
@@ -40,6 +54,13 @@
                     }
                 </div>
             }
+            else
+            {
+                <!-- Default Image when no image is provided -->
+                <div class="text-center mb-4">
+                    <img src="/images/dumbell.jpg" alt="Default Exercise Image" class="img-fluid rounded shadow" style="max-height: 450px; object-fit: cover;">
+                </div>
+            }
 
             <!-- Action Buttons -->
             <div class="d-flex justify-content-center gap-3">
@@ -48,22 +69,22 @@
                     {
                         @if (ViewBag.Status == -1)
                         {
-                            <button class="btn btn-success">Începe Exercițiul</button>
+                            <button class="btn btn-primary">Începe Exercițiul</button>
                         }
                         else if (ViewBag.Status == 0)
                         {
-                            <button class="btn btn-warning">Finalizează Exercițiul</button>
+                            <button class="btn btn-primary">Finalizează Exercițiul</button>
                         }
                         else
                         {
-                            <button class="btn btn-danger">Reia Exercițiul</button>
+                            <button class="btn btn-primary">Reia Exercițiul</button>
                         }
                     }
                 </form>
                 @if (ViewBag.EsteAdmin == true || ViewBag.EsteCreator == true)
                 {
-                    <a class="btn btn-info" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează</a>
-                    <a class="btn btn-secondary" asp-controller="Exercises" asp-action="AddUsers" asp-route-id="@Model.Id">Adaugă Utilizatori</a>
+                    <a class="btn btn-primary" asp-controller="Exercises" asp-action="Edit" asp-route-id="@Model.Id">Editează</a>
+                    <a class="btn btn-primary" asp-controller="Exercises" asp-action="AddUsers" asp-route-id="@Model.Id">Adaugă Utilizatori</a>
                     <form method="post" asp-controller="Exercises" asp-action="Delete" asp-route-id="@Model.Id" class="d-inline">
                         <button class="btn btn-danger" type="submit">Șterge</button>
                     </form>

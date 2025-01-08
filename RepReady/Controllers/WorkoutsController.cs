@@ -168,6 +168,7 @@ namespace RepReady.Controllers
 
             ViewBag.PaginationBaseUrl = "/Workouts/Show/" + workout.Id + "/?page";
 
+
             return View(workout);
         }
 

@@ -1,10 +1,6 @@
 ﻿@model RepReady.Models.Exercise
 
 
-@if(ViewBag.ErrorMessage != null)
-{
-    <div class="text-danger">@ViewBag.ErrorMessage</div>
-}
 
 <div class="container mt-5">
     <div class="row justify-content-center">
@@ -15,7 +11,13 @@
             <div class="card shadow-lg">
                 <div class="card-body">
                     <form enctype="multipart/form-data" method="post" asp-action="New" asp-controller="Exercises">
-                        <div asp-validation-summary="All" class="alert alert-danger"></div>
+                        <div asp-validation-summary="All" class="alert alert-danger">
+                            @if (ViewBag.ErrorMessage != null)
+                            {
+                                <div class="text-danger">@ViewBag.ErrorMessage</div>
+                            }
+
+                        </div>
                         <!-- Title -->
                         <div class="form-group">
                             <label asp-for="Title">Titlu exercițiu</label>
@@ -96,6 +98,11 @@
                         </div>
 
                         <br />
+                        <div class="alert alert-danger validation-summary-valid">
+                            <ul>
+                                <li style="display:none"></li>
+                            </ul>
+                        </div>
 
                         <!-- Submit Button -->
                         <button type="submit" class="btn btn-success">Adaugă exercițiul</button>

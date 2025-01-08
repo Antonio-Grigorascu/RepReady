@@ -39,10 +39,11 @@
 <div class="row card-size">
     @foreach (var workout in ViewBag.Workouts)
     {
+        
         <div class="col-md-4 mb-4 d-flex justify-content-center">
             <div class="card workout-card shadow-sm d-flex flex-column justify-content-between">
                 <div class="card-body">
-                    <h5 class="card-title workout-title mb-3">@workout.Name</h5>
+                    <h5 class="card-title workout-title mb-3 text-primary">@workout.Name</h5>
                     <p class="card-text workout-description">@workout.Description</p>
                 </div>
                 <div class="card-footer text-center">
@@ -50,14 +51,11 @@
                 </div>
             </div>
         </div>
-
-
-
     }
 </div>
 
 
-@* Afisarea paginata a articolelor *@
+@* Afisarea paginata *@
 
 <div class="page-navigation-btn">
     <nav aria-label="Page navigation example">

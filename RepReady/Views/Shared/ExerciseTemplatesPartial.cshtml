@@ -1,10 +1,8 @@
-﻿@*
-<h2 class="text-center mb-4">Lista Modelelor de Exerciții</h2>
-
-
+﻿@model IEnumerable<RepReady.Models.ExerciseTemplate>
+@*
 <div class="container-container">
     <div class="row">
-        @foreach (var template in ViewBag.ExerciseTemplates)
+        @foreach (var template in Model)
         {
             <div class="col-md-4 mb-4">
                 <div class="exercise-card p-4 border rounded-3 shadow-lg">
@@ -16,11 +14,7 @@
                         <p><strong>Reps:</strong> @template.Reps</p>
                         <p><strong>Sets:</strong> @template.Sets</p>
                     </div>
-                    <div class="d-flex justify-content-center">
-                        <a class="btn btn-primary" asp-controller="Exercises" asp-action="NewTemplate" asp-route-templateId="@template.Id" asp-route-workoutId="@ViewBag.WorkoutId">
-                            Folosește model
-                        </a>
-                    </div>
+                    
                 </div>
             </div>
         }
@@ -29,6 +23,9 @@
 *@
 
 <style>
+    .container-container{
+        width:80vw;
+    }
     .exercise-grid {
         display: grid;
         grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
@@ -59,7 +56,7 @@
 
 <div class="container-container">
     <div class="exercise-grid">
-        @foreach (var template in ViewBag.ExerciseTemplates)
+        @foreach (var template in Model)
         {
             <div class="exercise-card p-4 border rounded-3 shadow-lg">
                 <div class="exercise-header mb-3">
@@ -69,11 +66,6 @@
                     <p><strong>Description:</strong> @template.Description</p>
                     <p><strong>Reps:</strong> @template.Reps</p>
                     <p><strong>Sets:</strong> @template.Sets</p>
-                </div>
-                <div class="d-flex justify-content-center">
-                    <a class="btn btn-primary" asp-controller="Exercises" asp-action="NewTemplate" asp-route-templateId="@template.Id" asp-route-workoutId="@ViewBag.WorkoutId">
-                        Folosește model
-                    </a>
                 </div>
             </div>
         }

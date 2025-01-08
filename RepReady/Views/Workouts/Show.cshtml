@@ -1,5 +1,7 @@
 ﻿@model RepReady.Models.Workout
 
+
+
 <div class="container mt-5">
     @if (TempData["message"] != null)
     {
@@ -33,8 +35,9 @@
                 @* We passed the WorkoutId to the controller to know in which Workout we add the invitation *@
                 TempData["workoutId"] = @Model.Id;
                 <a class="btn btn-primary" asp-controller="WorkoutInvitations" asp-action="New">Invită participanți</a>
-        
+                
             }
+            
             @if (Model.CreatorId == ViewBag.UserCurent || ViewBag.EsteAdmin == true || ViewBag.EsteOrganizer == true)
             {
                 @* We passed the WorkoutId to the controller to know in which Workout we add the exercise *@
@@ -72,9 +75,9 @@
                     <p class="card-text text-muted">@exercise.Description</p>
                     <div class="d-flex flex-wrap gap-3">
                         <span class="badge bg-primary">Reps: @exercise.Reps</span>
-                        <span class="badge bg-success">Sets: @exercise.Sets</span>
-                        <span class="badge bg-info">Start: @exercise.Start.ToString("g")</span>
-                        <span class="badge bg-warning">Finish: @exercise.Finish.ToString("g")</span>
+                        <span class="badge bg-primary">Sets: @exercise.Sets</span>
+                        <span class="badge bg-primary">Start: @exercise.Start.ToString("g")</span>
+                        <span class="badge bg-primary">Finish: @exercise.Finish.ToString("g")</span>
                     </div>
                     <a class="btn btn-outline-primary mt-3" href="/Exercises/Show/@exercise.Id">Afișează Exercițiu</a>
                 </div>
