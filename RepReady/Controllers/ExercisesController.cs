@@ -42,6 +42,16 @@ namespace RepReady.Controllers
                                 .Include("Comments.User")  // All includes are for display
                                 .FirstOrDefault(e => e.Id == id);
 
+            var users = exercise.Users;
+            var currentUser = db.Users.Find(_userManager.GetUserId(User));
+
+            if (!users.Contains(currentUser))
+            {
+                TempData["message"] = "Nu aveti acces la acest exercitiu";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index", "Workouts");
+            }
+
 
             // For displaying the edit and delete buttons
             ViewBag.EsteAdmin = User.IsInRole("Admin");

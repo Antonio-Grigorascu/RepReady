@@ -119,6 +119,17 @@ namespace RepReady.Controllers
                                          .Where(workout => workout.Id == id)
                                          .First();
 
+
+            var users = workout.Users;
+            var currentUser = db.Users.Find(_userManager.GetUserId(User));
+
+            if (!users.Contains(currentUser))
+            {
+                TempData["message"] = "Nu aveti acces la acest antrenament";
+                TempData["messageType"] = "alert-danger";
+                return RedirectToAction("Index", "Workouts");
+            }
+
             // Get the creator of the workout
             ApplicationUser user = db.Users.Where(u => u.Id == workout.CreatorId).First();
 
@@ -213,13 +224,22 @@ namespace RepReady.Controllers
         public IActionResult Edit(int id)
         {
             Workout workout = db.Workouts.Include("Category")
+                                         .Include("Users")
                                          .Where(workout => workout.Id == id)
                                          .First();
 
             workout.Categ = GetAllCategories();
 
+            var users = db.Workouts.Include("Users").Where(w => w.Id == workout.Id).First().Users;
+
             if (workout.CreatorId == _userManager.GetUserId(User) ||User.IsInRole("Admin"))
             {
+                // For adding the users to the exercise (select checkboxes)
+                ViewBag.Users = users;
+
+                // For selecting the users (in the checkboxes) that are already part of the exercise
+                ViewBag.SelectedUsers = workout.Users.Select(u => u.Id).ToList();
+
                 return View(workout);
             }
             else
@@ -232,9 +252,20 @@ namespace RepReady.Controllers
 
         [HttpPost]
         [Authorize(Roles = "User,Admin")]
-        public IActionResult Edit(int id, Workout requestWorkout)
+        public IActionResult Edit(int id, Workout requestWorkout, List<string> UsersIdList)
         {
-            Workout workout = db.Workouts.Find(id);
+            Workout workout = db.Workouts.Include("Users")
+                                         .Where(workout => workout.Id == id)
+                                         .First();
+
+            // List of the users that were part of the workout before the edit
+            List<string> previousUsers = workout.Users.Select(u => u.Id).ToList();
+
+            // List of the users that are added to the workout in the edit
+            List<string>? addUsers = UsersIdList.Except(previousUsers).ToList();
+
+            // List of the users that are removed from the workout in the edit
+            List<string>? removeUsers = previousUsers.Except(UsersIdList).ToList();
 
             if (ModelState.IsValid)
             {
@@ -245,6 +276,21 @@ namespace RepReady.Controllers
                     workout.Duration = requestWorkout.Duration;
                     workout.Date = DateTime.Now;
                     workout.CategoryId = requestWorkout.CategoryId;
+
+                    for (int i = 0; i < addUsers.Count; i++)
+                    {
+                        // Add the users to the workout
+                        ApplicationUser user = db.Users.Find(addUsers[i]);
+                        workout.Users.Add(user);
+                    }
+
+                    for (int i = 0; i < removeUsers.Count; i++)
+                    {
+                        // Remove the users from the workout
+                        ApplicationUser user = db.Users.Find(removeUsers[i]);  
+                        workout.Users.Remove(user);
+                    }
+
                     TempData["message"] = "Antrenamentul a fost modificat";
                     TempData["messageType"] = "alert-success";
                     db.SaveChanges();

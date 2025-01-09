@@ -33,6 +33,25 @@
                             </select>
                             <span asp-validation-for="CategoryId" class="text-danger"></span>
                         </div>
+
+                        <!-- Edit users -->
+                        <!-- Multiple choice users -->
+                        <div class="mb-4">
+                            <label>Utilizatori</label><br />
+
+                            @foreach (var user in ViewBag.Users)
+                            {
+                                bool isChecked = ViewBag.SelectedUsers.Contains(user.Id);
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" name="UsersIdList" value="@user.Id" id="user_@user.Id" @(isChecked ? "checked" : "") />
+                                    <label class="form-check-label" for="user_@user.Id">
+                                        @user.UserName
+                                    </label>
+                                </div>
+                            }
+
+                        </div>
+
                         <br />
                         <div class="alert alert-danger validation-summary-valid">
                             <ul>
