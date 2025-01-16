@@ -123,7 +123,8 @@ namespace RepReady.Controllers
             var users = workout.Users;
             var currentUser = db.Users.Find(_userManager.GetUserId(User));
 
-            if (!users.Contains(currentUser))
+            if (!users.Contains(currentUser) && !User.IsInRole("Admin")
+                && (_userManager.GetUserId(User) != workout.CreatorId))
             {
                 TempData["message"] = "Nu aveti acces la acest antrenament";
                 TempData["messageType"] = "alert-danger";
